@@ -35,7 +35,8 @@ export function SudokuBoard() {
   const [cells, setCells] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
-
+  const [showMistakes, setShowMistakes] = useState(false);
+const [highlightUsedNumbers, setHighlightUsedNumbers] = useState(false);
   const startNewGame = (level) => {
     const newPuzzle = generatePuzzle(level);
     setDifficulty(level);
@@ -77,16 +78,16 @@ export function SudokuBoard() {
     }
   }, [cells, puzzleState]);
 
-  const usedValues = (() => {
-    if (selectedIndex == null) return new Set();
-    const related = getRelatedIndexes(selectedIndex);
-    const values = new Set();
-    for (let i of related) {
-      const val = cells[i].value;
-      if (val !== 0) values.add(val);
-    }
-    return values;
-  })();
+const usedValues = (() => {
+  if (!highlightUsedNumbers || selectedIndex == null) return new Set();
+  const related = getRelatedIndexes(selectedIndex);
+  const values = new Set();
+  for (let i of related) {
+    const val = cells[i].value;
+    if (val !== 0) values.add(val);
+  }
+  return values;
+})();
 
   if (!difficulty || !puzzleState) {
     return (
@@ -141,7 +142,7 @@ export function SudokuBoard() {
                 cursor: cell.isInitial || isComplete ? "default" : "pointer",
                 backgroundColor: cell.isInitial
                   ? "#eee"
-                  : cell.isIncorrect
+                  : cell.isIncorrect && showMistakes
                   ? "#fdd"
                   : isSelected
                   ? "#cceeff"
@@ -158,29 +159,92 @@ export function SudokuBoard() {
           );
         })}
       </div>
+<div style={{ marginTop: 20, marginBottom: 10 }}>
+  <label style={{ fontSize: "14px", cursor: "pointer" }}>
+    <input
+      type="checkbox"
+      checked={highlightUsedNumbers}
+      onChange={(e) => setHighlightUsedNumbers(e.target.checked)}
+      style={{ marginRight: "8px" }}
+    />
+    Highlight Used Numbers
+  </label>
+</div>
 
+<div style={{ marginTop: 5, marginBottom: 10 }}>
+  <label style={{ fontSize: "14px", cursor: "pointer" }}>
+    <input
+      type="checkbox"
+      checked={showMistakes}
+      onChange={(e) => setShowMistakes(e.target.checked)}
+      style={{ marginRight: "8px" }}
+    />
+    Show Mistakes
+  </label>
+</div>
       {/* Number Selector */}
       <div style={{ marginTop: 20 }}>
-        {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
-          <button
-            key={num}
-            onClick={() => handleNumberClick(num)}
-            disabled={isComplete}
-            style={{
-              width: 40,
-              height: 40,
-              margin: "0 4px",
-              fontSize: "16px",
-              cursor: "pointer",
-              backgroundColor: usedValues.has(num) ? "#ddd" : "white",
-              border: usedValues.has(num) ? "2px solid #aaa" : "1px solid #ccc",
-              color: usedValues.has(num) ? "#999" : "black",
-            }}
-          >
-            {num}
-          </button>
-        ))}
-      </div>
+  <div style={{ marginBottom: 10 }}>
+    {[1, 2, 3, 4, 5].map((num) => (
+      <button
+        key={num}
+        onClick={() => handleNumberClick(num)}
+        disabled={isComplete}
+        style={{
+          width: 40,
+          height: 40,
+          margin: "0 4px",
+          fontSize: "16px",
+          cursor: "pointer",
+          backgroundColor: usedValues.has(num) ? "#ddd" : "white",
+          border: usedValues.has(num) ? "2px solid #aaa" : "1px solid #ccc",
+          color: usedValues.has(num) ? "#999" : "black",
+        }}
+      >
+        {num}
+      </button>
+    ))}
+  </div>
+  <div>
+    {[6, 7, 8, 9].map((num) => (
+      <button
+        key={num}
+        onClick={() => handleNumberClick(num)}
+        disabled={isComplete}
+        style={{
+          width: 40,
+          height: 40,
+          margin: "0 4px",
+          fontSize: "16px",
+          cursor: "pointer",
+          backgroundColor: usedValues.has(num) ? "#ddd" : "white",
+          border: usedValues.has(num) ? "2px solid #aaa" : "1px solid #ccc",
+          color: usedValues.has(num) ? "#999" : "black",
+        }}
+      >
+        {num}
+      </button>
+    ))}
+
+    {/* Optional: Clear button */}
+    <button
+      onClick={() => handleNumberClick(0)} // or implement a `handleClear`
+      disabled={selectedIndex == null || isComplete}
+      style={{
+        width: 60,
+        height: 40,
+        margin: "0 8px",
+        fontSize: "14px",
+        cursor: "pointer",
+        backgroundColor: "#f5f5f5",
+        border: "1px solid #ccc",
+        color: "#333",
+      }}
+    >
+      Clear
+    </button>
+  </div>
+</div>
 
       {/* Game Over Message */}
       {isComplete && (
