@@ -2,11 +2,28 @@ import './App.css';
 import React, { useState, useEffect } from "react";
 import { generatePuzzle } from "./lib/sudoku-solver"; 
 
+
+const PencilIcon = ({ size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+  </svg>
+);
 function toCellState(puzzle, solution) {
   return puzzle.flat().map((val) => ({
     value: val,
     isInitial: val !== 0,
     isIncorrect: false,
+    notes: [],
   }));
 }
 
@@ -36,6 +53,8 @@ export function SudokuBoard() {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [showMistakes, setShowMistakes] = useState(false);
+const [noteMode, setNoteMode] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 const [highlightUsedNumbers, setHighlightUsedNumbers] = useState(false);
   const startNewGame = (level) => {
     const newPuzzle = generatePuzzle(level);
@@ -51,21 +70,50 @@ const [highlightUsedNumbers, setHighlightUsedNumbers] = useState(false);
     setSelectedIndex(index);
   };
 
-  const handleNumberClick = (num) => {
-    if (selectedIndex == null || isComplete) return;
 
-    const newCells = cells.map((cell, i) =>
-      i === selectedIndex
+const handleClear = () => {
+  if (selectedIndex == null || isComplete) return;
+
+  setCells((prev) =>
+    prev.map((cell, i) =>
+      i === selectedIndex && !cell.isInitial
         ? {
             ...cell,
-            value: num,
-            isIncorrect: num !== puzzleState.solution[Math.floor(i / 9)][i % 9],
+            value: 0,
+            notes: [],
+            isIncorrect: false,
           }
         : cell
-    );
+    )
+  );
+};
+const handleNumberClick = (num) => {
+  if (selectedIndex == null || isComplete) return;
 
-    setCells(newCells);
-  };
+  setCells((prev) =>
+    prev.map((cell, i) => {
+      if (i !== selectedIndex || cell.isInitial) return cell;
+
+      if (noteMode) {
+        const alreadyHas = cell.notes.includes(num);
+        const newNotes = alreadyHas
+          ? cell.notes.filter((n) => n !== num)
+          : [...cell.notes, num].sort();
+        return {
+          ...cell,
+          notes: newNotes,
+        };
+      } else {
+        return {
+          ...cell,
+          value: num,
+          notes: [],
+          isIncorrect: showMistakes && num !== puzzleState.solution[Math.floor(i / 9)][i % 9],
+        };
+      }
+    })
+  );
+};
 
   useEffect(() => {
     if (!puzzleState) return;
@@ -113,7 +161,65 @@ const usedValues = (() => {
 
   return (
     <div style={{ userSelect: "none", textAlign: "center" }}>
-      <h2>Sudoku ({difficulty})</h2>
+     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "12px" }}>
+  <h2 style={{ margin: 0 }}>Sudoku ({difficulty})</h2>
+
+  <div style={{ position: "relative" }}>
+    <button
+      onClick={() => setShowSettings((v) => !v)}
+      style={{
+        fontSize: "14px",
+        padding: "4px 8px",
+        cursor: "pointer",
+      }}
+    >
+      ⚙️ Settings
+    </button>
+
+    {showSettings && (
+      <div
+        style={{
+          position: "absolute",
+          top: "100%",
+          right: 0,
+          backgroundColor: "white",
+          border: "1px solid #ccc",
+          borderRadius: "4px",
+          padding: "10px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+          zIndex: 10,
+          minWidth: "180px",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <label style={{ display: "flex", alignItems: "center", fontSize: "14px", marginBottom: "8px" }}>
+          <input
+            type="checkbox"
+            checked={highlightUsedNumbers}
+            onChange={(e) => { 
+              setHighlightUsedNumbers(e.target.checked);
+              setShowSettings(false);
+             }}
+            style={{ marginRight: "8px" }}
+          />
+          Highlight Used Numbers
+        </label>
+
+        <label style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
+          <input
+            type="checkbox"
+            checked={showMistakes}
+            onChange={(e) =>  {setShowMistakes(e.target.checked);
+                setShowSettings(false);
+            }}
+            style={{ marginRight: "8px" }}
+          />
+          Show Mistakes
+        </label>
+      </div>
+    )}
+  </div>
+</div>
 
       {/* Sudoku Grid */}
       <div
@@ -131,57 +237,98 @@ const usedValues = (() => {
           const isSelected = i === selectedIndex;
           return (
             <div
-              key={i}
-              onClick={() => handleCellClick(i)}
-              style={{
-                width: 40,
-                height: 40,
-                lineHeight: "40px",
-                textAlign: "center",
-                fontSize: "18px",
-                cursor: cell.isInitial || isComplete ? "default" : "pointer",
-                backgroundColor: cell.isInitial
-                  ? "#eee"
-                  : cell.isIncorrect && showMistakes
-                  ? "#fdd"
-                  : isSelected
-                  ? "#cceeff"
-                  : "white",
-                border: "1px solid gray",
-                borderTop:
-                  Math.floor(i / 9) % 3 === 0 ? "2px solid black" : "1px solid gray",
-                borderLeft:
-                  i % 9 % 3 === 0 ? "2px solid black" : "1px solid gray",
-              }}
-            >
-              {cell.value !== 0 ? cell.value : ""}
-            </div>
+  key={i}
+  onClick={() => handleCellClick(i)}
+  style={{
+    width: 40,
+    height: 40,
+    fontSize: "18px",
+    position: "relative",
+    textAlign: "center",
+    cursor: cell.isInitial || isComplete ? "default" : "pointer",
+    backgroundColor: cell.isInitial
+      ? "#eee"
+      : cell.isIncorrect
+      ? "#fdd"
+      : isSelected
+      ? "#cceeff"
+      : "white",
+    border: "1px solid gray",
+    borderTop: Math.floor(i / 9) % 3 === 0 ? "2px solid black" : "1px solid gray",
+    borderLeft: i % 9 % 3 === 0 ? "2px solid black" : "1px solid gray",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  {cell.value !== 0 ? (
+    cell.value
+  ) : cell.notes.length ? (
+    <div
+      style={{
+        position: "absolute",
+        top: 2,
+        left: 2,
+        right: 2,
+        bottom: 2,
+        fontSize: "10px",
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gridTemplateRows: "repeat(3, 1fr)",
+        lineHeight: "1.2",
+        color: "#666",
+      }}
+    >
+      {Array.from({ length: 9 }, (_, j) => j + 1).map((n) => (
+        <div key={n} style={{ textAlign: "center" }}>
+          {cell.notes.includes(n) ? n : ""}
+        </div>
+      ))}
+    </div>
+  ) : (
+    ""
+  )}
+</div>
           );
         })}
       </div>
-<div style={{ marginTop: 20, marginBottom: 10 }}>
-  <label style={{ fontSize: "14px", cursor: "pointer" }}>
-    <input
-      type="checkbox"
-      checked={highlightUsedNumbers}
-      onChange={(e) => setHighlightUsedNumbers(e.target.checked)}
-      style={{ marginRight: "8px" }}
-    />
-    Highlight Used Numbers
-  </label>
+
+<div style={{ marginTop: 20, marginBottom: 10, width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+  <button
+    onClick={() => setNoteMode((v) => !v)}
+    style={{
+      position: "relative",
+      width: 40,
+      height: 40,
+      cursor: "pointer",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+      backgroundColor: noteMode ? "#e0f7fa" : "#f9f9f9",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+    aria-label="Toggle pencil note mode"
+  >
+    <PencilIcon size={20} />
+    <span
+      style={{
+        position: "absolute",
+        top: -6,
+        right: -6,
+        backgroundColor: noteMode ? "#4caf50" : "#ccc",
+        color: "white",
+        fontSize: "10px",
+        padding: "1px 4px",
+        borderRadius: "10px",
+        fontWeight: "bold",
+      }}
+    >
+      {noteMode ? "on" : "off"}
+    </span>
+  </button>
 </div>
 
-<div style={{ marginTop: 5, marginBottom: 10 }}>
-  <label style={{ fontSize: "14px", cursor: "pointer" }}>
-    <input
-      type="checkbox"
-      checked={showMistakes}
-      onChange={(e) => setShowMistakes(e.target.checked)}
-      style={{ marginRight: "8px" }}
-    />
-    Show Mistakes
-  </label>
-</div>
       {/* Number Selector */}
       <div style={{ marginTop: 20 }}>
   <div style={{ marginBottom: 10 }}>
@@ -228,7 +375,7 @@ const usedValues = (() => {
 
     {/* Optional: Clear button */}
     <button
-      onClick={() => handleNumberClick(0)} // or implement a `handleClear`
+      onClick={() => {handleClear();}}
       disabled={selectedIndex == null || isComplete}
       style={{
         width: 60,
