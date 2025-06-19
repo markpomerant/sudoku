@@ -174,6 +174,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             setShowMistakes(false);
             setSelectedIndex(null);
             resetTimer();
+            start(); // Ensure timer is unpaused when starting a new game
             startNewGame(level);
         };
 

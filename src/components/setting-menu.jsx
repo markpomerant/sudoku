@@ -158,7 +158,15 @@ function WrenchIcon({ size = 20 }) {
 
 // Styled components
 const MenuContainer = styled.div`
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3000; /* Higher than PausedOverlay (2000) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const WrenchIconStyled = styled(WrenchIcon)`
@@ -182,7 +190,7 @@ const ModalOverlay = styled.div`
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,0.4);
-  z-index: 1000;
+  z-index: 3001;
   display: flex;
   align-items: center;
   justify-content: center;
