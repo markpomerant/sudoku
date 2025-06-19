@@ -28,6 +28,7 @@ body {
   --note-bg: #fff;
   --note-color: #666;
   --complete-message: green;
+  --center-note-bg: #e3f2fd;
 
   --note-badge-on: var(--accent);
   --note-badge-off: var(--button-border);
@@ -57,6 +58,7 @@ body.theme-dark {
   --note-bg: #23272e;
   --note-color: #b0b0b0;
   --complete-message: #00bcd4;
+  --center-note-bg: #263238;
 
   --note-badge-on: #00bcd4;
   --note-badge-off: #444;
@@ -86,6 +88,7 @@ body.theme-ocean {
   --note-bg: #17445e;
   --note-color: #b2ebf2;
   --complete-message: #26c6da;
+  --center-note-bg: #145374;
 
   --note-badge-on: #26c6da;
   --note-badge-off: #17445e;
@@ -115,6 +118,7 @@ body.theme-redsands {
   --note-bg: #4e342e;
   --note-color: #ffab91;
   --complete-message: #ff7043;
+  --center-note-bg: #5d4037;
 
   --note-badge-on: #ff7043;
   --note-badge-off: #4e342e;
@@ -144,6 +148,7 @@ body.theme-plain {
   --note-bg: #fafafa;
   --note-color: #888;
   --complete-message: #888;
+  --center-note-bg: #f5f5f5;
 
   --note-badge-on: #888;
   --note-badge-off: #bbb;
@@ -173,6 +178,7 @@ body.theme-matrix {
   --note-bg: #222b22;
   --note-color: #baffc9;
   --complete-message: #39ff14;
+  --center-note-bg: #003300;
 
   --note-badge-on: #39ff14;
   --note-badge-off: #222b22;
@@ -202,6 +208,7 @@ body.theme-solarized {
   --note-bg: #fdf6e3;
   --note-color: #b58900;
   --complete-message: #b58900;
+  --center-note-bg: #eee8d5;
 
   --note-badge-on: #b58900;
   --note-badge-off: #eee8d5;
@@ -231,6 +238,7 @@ body.theme-vibrant {
   --note-bg: #fff0f6;
   --note-color: #d72660;
   --complete-message: #1b998b;
+  --center-note-bg: #fffde7;
 
   --note-badge-on: #d72660;
   --note-badge-off: #f3c623;
@@ -260,6 +268,7 @@ body.theme-barbie {
   --note-bg: #ffe0f7;
   --note-color: #e21b80;
   --complete-message: #ff69b4;
+  --center-note-bg: #ffd6ec;
 
   --note-badge-on: #e21b80;
   --note-badge-off: #ff69b4;

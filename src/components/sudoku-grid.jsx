@@ -36,11 +36,13 @@ function SudokuCell({ cell, isSelected, onClick }) {
     >
       {cell.value !== 0 ? (
         cell.value
+      ) : cell.centerNotes && cell.centerNotes.length === 1 ? (
+        <CenterNote>{cell.centerNotes[0]}</CenterNote>
       ) : cell.notes.length ? (
         <NotesDiv>
-          {Array.from({ length: 9 }, (_, j) => j + 1).map((n) => (
-            <NoteNumber key={n}>
-              {cell.notes.includes(n) ? n : ""}
+          {Array.from({ length: 9 }, (_, j) => (
+            <NoteNumber key={j + 1}>
+              {cell.notes.includes(j + 1) ? j + 1 : ""}
             </NoteNumber>
           ))}
         </NotesDiv>
@@ -119,4 +121,24 @@ const NotesDiv = styled.div`
 
 const NoteNumber = styled.div`
   text-align: center;
+`;
+
+const CenterNote = styled.div`
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--note-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--center-note-bg);
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 2;
 `;

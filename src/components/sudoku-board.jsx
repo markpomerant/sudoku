@@ -52,6 +52,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
         } = useTimer(true);
         const [showSettings, setShowSettings] = useState(false);
         const [noteMode, setNoteMode] = React.useState(false);
+        const [centerNoteMode, setCenterNoteMode] = React.useState(false);
         const [highlightUsedNumbers, setHighlightUsedNumbers] = React.useState(false);
         const [showMistakes, setShowMistakes] = React.useState(false);
         const validThemes = [
@@ -117,7 +118,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             setCells(prev =>
                 prev.map((cell, i) =>
                     i === selectedIndex && !cell.isInitial
-                        ? { ...cell, value: 0, notes: [], isIncorrect: false }
+                        ? { ...cell, value: 0, notes: [], centerNotes: [], isIncorrect: false }
                         : cell
                 )
             );
@@ -131,16 +132,21 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                     if (i !== selectedIndex || cell.isInitial) return cell;
 
                     if (noteMode) {
+                        // Replace any center note with pencil notes
                         const alreadyHas = cell.notes.includes(num);
                         const newNotes = alreadyHas
                             ? cell.notes.filter(n => n !== num)
                             : [...cell.notes, num].sort();
-                        return { ...cell, notes: newNotes };
+                        return { ...cell, notes: newNotes, centerNotes: [] };
+                    } else if (centerNoteMode) {
+                        // Replace any pencil notes with a single center note
+                        return { ...cell, centerNotes: [num], notes: [] };
                     } else {
                         return {
                             ...cell,
                             value: num,
                             notes: [],
+                            centerNotes: [],
                             isIncorrect: showMistakes && num !== puzzleState.solution[Math.floor(i / 9)][i % 9],
                         };
                     }
@@ -185,7 +191,12 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                     isComplete={isComplete}
                 />
 
-                <NoteToggleButton noteMode={noteMode} onToggle={() => setNoteMode(!noteMode)} />
+                <NoteToggleButton
+                    noteMode={noteMode}
+                    onToggle={setNoteMode}
+                    centerNoteMode={centerNoteMode}
+                    onCenterToggle={setCenterNoteMode}
+                />
 
                 <NumberPad
                     usedValues={usedValues}

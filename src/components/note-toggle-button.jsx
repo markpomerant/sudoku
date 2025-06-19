@@ -40,23 +40,73 @@ export function PencilIcon({ size = 20 }) {
 }
 
 /**
- * Button to toggle pencil note mode in Sudoku.
+ * SVG icon for center note mode toggle button.
  *
- * @param {{ noteMode: boolean, onToggle: () => void }} props - Component props.
+ * @param {{ size?: number }} props - Icon props.
+ * @returns {JSX.Element} The rendered SVG icon.
+ */
+export function CenterNoteIcon({ size = 20 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="4" y="4" width="16" height="16" rx="4" />
+      <circle cx="12" cy="12" r="3" fill="currentColor" />
+    </svg>
+  );
+}
+
+/**
+ * Button to toggle pencil and center note modes in Sudoku.
+ *
+ * @param {{ noteMode: boolean, onToggle: () => void, centerNoteMode: boolean, onCenterToggle: () => void }} props - Component props.
  * @returns {JSX.Element} The rendered button.
  */
-export default function NoteToggleButton({ noteMode, onToggle }) {
+export default function NoteToggleButton({ noteMode, onToggle, centerNoteMode, onCenterToggle }) {
   return (
-    <StyledButton
-      onClick={onToggle}
-      noteMode={noteMode}
-      aria-label="Toggle pencil note mode"
-    >
-      <PencilIcon size={20} />
-      <StatusSpan noteMode={noteMode}>
-        {noteMode ? "on" : "off"}
-      </StatusSpan>
-    </StyledButton>
+    <div style={{ display: 'flex', gap: 8 }}>
+      <StyledButton
+        onClick={() => {
+          if (noteMode) onToggle(false);
+          else {
+            onToggle(true);
+            if (centerNoteMode) onCenterToggle(false);
+          }
+        }}
+        noteMode={noteMode}
+        aria-label="Toggle pencil note mode"
+        active={noteMode}
+      >
+        <PencilIcon size={20} />
+        <StatusSpan noteMode={noteMode}>
+          {noteMode ? "on" : "off"}
+        </StatusSpan>
+      </StyledButton>
+      <StyledButton
+        onClick={() => {
+          if (centerNoteMode) onCenterToggle(false);
+          else {
+            onCenterToggle(true);
+            if (noteMode) onToggle(false);
+          }
+        }}
+        noteMode={centerNoteMode}
+        aria-label="Toggle center note mode"
+        active={centerNoteMode}
+      >
+        <CenterNoteIcon size={20} />
+        <StatusSpan noteMode={centerNoteMode}>
+          {centerNoteMode ? "on" : "off"}
+        </StatusSpan>
+      </StyledButton>
+    </div>
   );
 }
 
