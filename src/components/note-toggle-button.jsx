@@ -79,8 +79,8 @@ const StatusSpan = styled.span`
   position: absolute;
   top: -6px;
   right: -6px;
-  background-color: ${({ noteMode }) => noteMode ? 'var(--accent)' : 'var(--button-border)'};
-  color: #fff;
+  background-color: ${({ noteMode }) => noteMode ? 'var(--note-badge-on, var(--accent))' : 'var(--note-badge-off, var(--button-border))'};
+  color: ${({ noteMode }) => noteMode ? 'var(--note-badge-on-text, #fff)' : 'var(--note-badge-off-text, #fff)'};
   font-size: 10px;
   padding: 1px 4px;
   border-radius: 10px;
