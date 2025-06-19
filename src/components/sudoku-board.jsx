@@ -54,9 +54,12 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
         const [noteMode, setNoteMode] = React.useState(false);
         const [highlightUsedNumbers, setHighlightUsedNumbers] = React.useState(false);
         const [showMistakes, setShowMistakes] = React.useState(false);
-        const [theme, setTheme] = React.useState('light');
+        // Initialize theme from localStorage synchronously
+        const [theme, setTheme] = React.useState(() => localStorage.getItem('sudoku-theme') || 'light');
 
-        React.useEffect(() => {
+        // Save theme to localStorage whenever it changes
+        useEffect(() => {
+            localStorage.setItem('sudoku-theme', theme);
             document.body.classList.remove('theme-light', 'theme-dark', 'theme-ocean', 'theme-redsands');
             document.body.classList.add(`theme-${theme}`);
         }, [theme]);

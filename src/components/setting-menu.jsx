@@ -17,10 +17,10 @@
 //   <SettingsMenu show={bool} onToggle={fn} onRestart={fn} onNewGame={fn} showMistakes={bool} onToggleMistakes={fn} highlightUsedNumbers={bool} onToggleHighlight={fn} />
 
 import React from "react";
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 
 /**
- * Renders the settings menu for Sudoku game options and actions.
+ * Renders the settings menu for Sudoku game options and actions as a modal.
  *
  * @param {{
  *   show: boolean,
@@ -30,9 +30,11 @@ import styled from '@emotion/styled'
  *   showMistakes: boolean,
  *   onToggleMistakes: () => void,
  *   highlightUsedNumbers: boolean,
- *   onToggleHighlight: () => void
+ *   onToggleHighlight: () => void,
+ *   theme: string,
+ *   onThemeChange: (theme: string) => void
  * }} props - Component props.
- * @returns {JSX.Element} The rendered settings menu.
+ * @returns {JSX.Element} The rendered settings modal.
  */
 export default function SettingsMenu({
   show,
@@ -46,7 +48,6 @@ export default function SettingsMenu({
   theme,
   onThemeChange,
 }) {
- 
   return (
     <MenuContainer>
       <SettingsButton onClick={onToggle}>
@@ -54,51 +55,59 @@ export default function SettingsMenu({
       </SettingsButton>
 
       {show && (
-        <DropdownMenu>
-          <StyledLabel>
-            <input
-              type="checkbox"
-              checked={highlightUsedNumbers}
-              onChange={(e) => {
-                onToggleHighlight(e.target.checked);
-              }}
-            />
-            Highlight Used Numbers
-          </StyledLabel>
+        <ModalOverlay>
+          <ModalContent>
+            <ModalHeader>
+              <span>Settings</span>
+              <CloseButton onClick={onToggle}>&times;</CloseButton>
+            </ModalHeader>
+            <ModalBody>
+              <StyledLabel>
+                <input
+                  type="checkbox"
+                  checked={highlightUsedNumbers}
+                  onChange={(e) => {
+                    onToggleHighlight(e.target.checked);
+                  }}
+                />
+                Highlight Used Numbers
+              </StyledLabel>
 
-          <StyledLabel>
-            <input
-              type="checkbox"
-              checked={showMistakes}
-              onChange={(e) => {
-                onToggleMistakes(e.target.checked);
-              }}
-            />
-            Show Mistakes
-          </StyledLabel>
+              <StyledLabel>
+                <input
+                  type="checkbox"
+                  checked={showMistakes}
+                  onChange={(e) => {
+                    onToggleMistakes(e.target.checked);
+                  }}
+                />
+                Show Mistakes
+              </StyledLabel>
 
-          <StyledHr />
+              <StyledHr />
 
-          <StyledLabel>
-            Theme:
-            <ThemeSelect value={theme} onChange={e => onThemeChange(e.target.value)}>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="ocean">Ocean</option>
-              <option value="redsands">Red Sands</option>
-            </ThemeSelect>
-          </StyledLabel>
+              <StyledLabel>
+                Theme:
+                <ThemeSelect value={theme} onChange={e => onThemeChange(e.target.value)}>
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                  <option value="ocean">Ocean</option>
+                  <option value="redsands">Red Sands</option>
+                </ThemeSelect>
+              </StyledLabel>
 
-          <StyledHr />
+              <StyledHr />
 
-          <MenuActionButton onClick={onRestart}>
-            🔄 Restart Game
-          </MenuActionButton>
+              <MenuActionButton onClick={onRestart}>
+                🔄 Restart Game
+              </MenuActionButton>
 
-          <MenuActionButton onClick={onNewGame}>
-            🔄 New Game
-          </MenuActionButton>
-        </DropdownMenu>
+              <MenuActionButton onClick={onNewGame}>
+                🔄 New Game
+              </MenuActionButton>
+            </ModalBody>
+          </ModalContent>
+        </ModalOverlay>
       )}
     </MenuContainer>
   );
@@ -124,21 +133,55 @@ const SettingsButton = styled.button`
   }
 `;
 
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: var(--primary-bg);
-  border: 1px solid var(--button-border);
-  border-radius: 4px;
-  padding: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  z-index: 10;
-  min-width: 180px;
-  white-space: nowrap;
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalContent = styled.div`
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  min-width: 320px;
+  max-width: 90vw;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px 8px 20px;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--primary-text);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+`;
+
+const ModalBody = styled.div`
+  padding: 0 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
 const StyledLabel = styled.label`
