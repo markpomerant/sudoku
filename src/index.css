@@ -21,7 +21,8 @@ body {
   --timer-color: #777;
   --cell-initial-bg: #eee;
   --cell-selected-bg: #cceeff;
-  --cell-incorrect-bg: #fdd;
+  --cell-incorrect-bg: #ff1744;
+  --cell-incorrect-text: #222;
   --cell-border: gray;
   --cell-border-strong: black;
   --note-bg: #fff;
@@ -44,7 +45,8 @@ body.theme-dark {
   --timer-color: #b0b0b0;
   --cell-initial-bg: #222;
   --cell-selected-bg: #003c4d;
-  --cell-incorrect-bg: #4d2323;
+  --cell-incorrect-bg: #ff1744;
+  --cell-incorrect-text: #fff;
   --cell-border: #444;
   --cell-border-strong: #888;
   --note-bg: #23272e;
@@ -67,7 +69,8 @@ body.theme-ocean {
   --timer-color: #b2ebf2;
   --cell-initial-bg: #145374;
   --cell-selected-bg: #26c6da;
-  --cell-incorrect-bg: #ff8a80;
+  --cell-incorrect-bg: #ff1744;
+  --cell-incorrect-text: #fff;
   --cell-border: #26c6da;
   --cell-border-strong: #00acc1;
   --note-bg: #17445e;
@@ -90,12 +93,133 @@ body.theme-redsands {
   --timer-color: #ffab91;
   --cell-initial-bg: #3e2723;
   --cell-selected-bg: #ff7043;
-  --cell-incorrect-bg: #b71c1c;
+  --cell-incorrect-bg: #ff1744;
+  --cell-incorrect-text: #fff;
   --cell-border: #ff7043;
   --cell-border-strong: #ffab91;
   --note-bg: #4e342e;
   --note-color: #ffab91;
   --complete-message: #ff7043;
+}
+
+body.theme-plain {
+  --primary-bg: #fafafa;
+  --primary-text: #222;
+  --secondary-bg: #ededed;
+  --accent: #888;
+  --button-bg: #ededed;
+  --button-bg-alt: #fafafa;
+  --button-text: #222;
+  --button-border: #bbb;
+  --button-border-active: #888;
+  --header-bg: #fafafa;
+  --header-text: #222;
+  --timer-color: #888;
+  --cell-initial-bg: #e0e0e0;
+  --cell-selected-bg: #bdbdbd;
+  --cell-incorrect-bg: #ff1744;
+  --cell-incorrect-text: #222;
+  --cell-border: #bbb;
+  --cell-border-strong: #888;
+  --note-bg: #fafafa;
+  --note-color: #888;
+  --complete-message: #888;
+}
+
+body.theme-matrix {
+  --primary-bg: #181c18;
+  --primary-text: #39ff14;
+  --secondary-bg: #222b22;
+  --accent: #39ff14;
+  --button-bg: #222b22;
+  --button-bg-alt: #181c18;
+  --button-text: #39ff14;
+  --button-border: #39ff14;
+  --button-border-active: #baffc9;
+  --header-bg: #222b22;
+  --header-text: #39ff14;
+  --timer-color: #baffc9;
+  --cell-initial-bg: #263826;
+  --cell-selected-bg: #39ff14;
+  --cell-incorrect-bg: #ff1744;
+  --cell-incorrect-text: #fff;
+  --cell-border: #39ff14;
+  --cell-border-strong: #baffc9;
+  --note-bg: #222b22;
+  --note-color: #baffc9;
+  --complete-message: #39ff14;
+}
+
+body.theme-solarized {
+  --primary-bg: #fdf6e3;
+  --primary-text: #657b83;
+  --secondary-bg: #eee8d5;
+  --accent: #b58900;
+  --button-bg: #eee8d5;
+  --button-bg-alt: #fdf6e3;
+  --button-text: #657b83;
+  --button-border: #b58900;
+  --button-border-active: #cb4b16;
+  --header-bg: #eee8d5;
+  --header-text: #657b83;
+  --timer-color: #b58900;
+  --cell-initial-bg: #eee8d5;
+  --cell-selected-bg: #b58900;
+  --cell-incorrect-bg: #dc322f;
+  --cell-incorrect-text: #fff;
+  --cell-border: #b58900;
+  --cell-border-strong: #cb4b16;
+  --note-bg: #fdf6e3;
+  --note-color: #b58900;
+  --complete-message: #b58900;
+}
+
+body.theme-vibrant {
+  --primary-bg: #fff0f6;
+  --primary-text: #d72660;
+  --secondary-bg: #f3c623;
+  --accent: #1b998b;
+  --button-bg: #f3c623;
+  --button-bg-alt: #fff0f6;
+  --button-text: #d72660;
+  --button-border: #1b998b;
+  --button-border-active: #d72660;
+  --header-bg: #f3c623;
+  --header-text: #d72660;
+  --timer-color: #1b998b;
+  --cell-initial-bg: #f3c623;
+  --cell-selected-bg: #1b998b;
+  --cell-incorrect-bg: #d72660;
+  --cell-incorrect-text: #fff;
+  --cell-border: #1b998b;
+  --cell-border-strong: #d72660;
+  --note-bg: #fff0f6;
+  --note-color: #d72660;
+  --complete-message: #1b998b;
+}
+
+body.theme-barbie {
+  --primary-bg: #fff4fb;
+  --primary-text: #e21b80;
+  --secondary-bg: #ffe0f7;
+  --accent: #ff69b4;
+  --button-bg: #ffe0f7;
+  --button-bg-alt: #fff0fa;
+  --button-text: #e21b80;
+  --button-border: #ff69b4;
+  --button-border-active: #e21b80;
+  --header-bg: transparent;
+  --header-text: #e21b80;
+  --timer-color: #ff69b4;
+  --cell-initial-bg: #ffd6ec;
+  --cell-selected-bg: #ff69b4;
+  --cell-incorrect-bg: #e21b80;
+  --cell-incorrect-text: #fff;
+  --cell-border: #ff69b4;
+  --cell-border-strong: #e21b80;
+  --note-bg: #ffe0f7;
+  --note-color: #e21b80;
+  --complete-message: #ff69b4;
 }
 
 code {

@@ -99,7 +99,7 @@ const CellDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary-text);
+  color: ${({ isIncorrect }) => isIncorrect ? 'var(--cell-incorrect-text)' : 'var(--primary-text)'};
 `;
 
 const NotesDiv = styled.div`

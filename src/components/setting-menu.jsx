@@ -91,8 +91,14 @@ export default function SettingsMenu({
                 <ThemeSelect value={theme} onChange={e => onThemeChange(e.target.value)}>
                   <option value="light">Light</option>
                   <option value="dark">Dark</option>
+                  <option value="barbie">Barbie</option>
                   <option value="ocean">Ocean</option>
                   <option value="redsands">Red Sands</option>
+                  <option value="plain">Plain</option>
+                  <option value="matrix">Matrix</option>
+                  <option value="solarized">Solarized</option>
+                  <option value="vibrant">Vibrant</option>
+                  
                 </ThemeSelect>
               </StyledLabel>
 

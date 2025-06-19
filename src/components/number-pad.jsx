@@ -27,6 +27,15 @@ import styled from '@emotion/styled'
  * }} props - Component props.
  * @returns {JSX.Element} The rendered number pad.
  */
+
+// Add a clear (X) icon component
+const ClearIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="5" y1="5" x2="15" y2="15" />
+    <line x1="15" y1="5" x2="5" y2="15" />
+  </svg>
+);
+
 export default function NumberPad({
   onNumberClick,
   onClear,
@@ -62,8 +71,9 @@ export default function NumberPad({
         <ClearButton
           onClick={onClear}
           disabled={selectedIndex == null || isComplete}
+          aria-label="Clear cell"
         >
-          Clear
+          <ClearIcon />
         </ClearButton>
       </Row>
     </PadContainer>
@@ -99,15 +109,18 @@ const NumberButton = styled.button`
 `;
 
 const ClearButton = styled.button`
-  width: 60px;
+  width: 40px;
   height: 40px;
-  margin: 0 8px;
-  font-size: 14px;
+  margin: 0 4px;
+  font-size: 16px;
   cursor: pointer;
   background-color: var(--secondary-bg);
   border: 1px solid var(--button-border);
   color: var(--button-text);
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.2s, color 0.2s;
   &:hover {
     background: var(--button-bg);
