@@ -14,9 +14,10 @@ import GameHeader from "./game-header";
 import SettingsMenu from "./setting-menu";
 import SudokuGrid from "./sudoku-grid";
 import NumberPad from "./number-pad";
-import NoteToggleButton from "./note-toggle-button";
+import NoteToggleButton, { /* ...existing code... */ } from "./note-toggle-button";
 import DifficultySelector from "./difficulty-selector";
 import Confetti from "./Confetti";
+import PauseToggleButton, { PausePlayIcon } from "./pause-toggle-button";
 
 import { useSudokuState } from "../hooks/use-sudoku-state";
 import { useTimer } from "../hooks/use-timer";
@@ -44,13 +45,16 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             originalCells,
         } = useSudokuState();
 
+        const timer = useTimer(true);
         const {
             elapsedSeconds,
             isActive: timerActive,
             stop: stopTimer,
             reset: resetTimer,
-            setElapsedSeconds
-        } = useTimer(true);
+            setElapsedSeconds,
+            start
+        } = timer;
+
         const [showSettings, setShowSettings] = useState(false);
         const [noteMode, setNoteMode] = React.useState(false);
         const [centerNoteMode, setCenterNoteMode] = React.useState(false);
@@ -99,6 +103,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             noteMode,
             highlightUsedNumbers,
             showMistakes,
+            timerActive // persist paused state
         });
 
         useEffect(() => {
@@ -110,7 +115,11 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                 setHighlightUsedNumbers(restoredState.highlightUsedNumbers);
                 setShowMistakes(restoredState.showMistakes);
                 setElapsedSeconds(restoredState.elapsedSeconds);
-                
+                if (restoredState.timerActive === false) {
+                    stopTimer();
+                } else {
+                    start();
+                }
             }
         }, [restoredState]);
 
@@ -168,6 +177,16 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             startNewGame(level);
         };
 
+        const handlePauseToggle = () => {
+            if (timerActive) {
+                stopTimer();
+            } else {
+                if (!isComplete) {
+                    start();
+                }
+            }
+        };
+
         if (!hasLoaded) return null;
 
         if (!difficulty || !puzzleState) {
@@ -177,7 +196,10 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
         return (
             <BoardContainer>
                 {isComplete && <Confetti />}
-                <GameHeader difficulty={difficulty} elapsedSeconds={elapsedSeconds}>
+                <GameHeader
+                    difficulty={difficulty}
+                    elapsedSeconds={elapsedSeconds}
+                >
                     <SettingsMenu
                         show={showSettings}
                         onNewGame={() => {
@@ -196,6 +218,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                             setIsComplete(false);
                             setShowSettings(false);
                             resetTimer();
+                            start(); // Ensure timer resumes after restart
                             setNoteMode(false);
                             setCenterNoteMode(false);
                             setHighlightUsedNumbers(false);
@@ -212,25 +235,39 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                     />
                 </GameHeader>
 
-                <SudokuGrid
-                    cells={cells}
-                    selectedIndex={selectedIndex}
-                    onSelect={handleCellClick}
-                    isComplete={isComplete}
-                />
+                <div style={{ position: 'relative', display: 'inline-block' }}>
+                    {!timerActive && (
+                        <PausedOverlay onClick={handlePauseToggle} title="Click to resume">
+                            <PausePlayIcon paused={true} size={64} />
+                        </PausedOverlay>
+                    )}
+                    <SudokuGrid
+                        cells={cells}
+                        selectedIndex={selectedIndex}
+                        onSelect={timerActive ? handleCellClick : () => {}}
+                        isComplete={isComplete}
+                        disabled={!timerActive}
+                    />
+                </div>
 
-                <NoteToggleButton
-                    noteMode={noteMode}
-                    onToggle={setNoteMode}
-                    centerNoteMode={centerNoteMode}
-                    onCenterToggle={setCenterNoteMode}
-                />
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 8 }}>
+                    <NoteToggleButton
+                        noteMode={noteMode}
+                        onToggle={setNoteMode}
+                        centerNoteMode={centerNoteMode}
+                        onCenterToggle={setCenterNoteMode}
+                    />
+                    <PauseToggleButton
+                        timerActive={timerActive}
+                        onPauseToggle={handlePauseToggle}
+                    />
+                </div>
 
                 <NumberPad
                     usedValues={usedValues}
-                    isComplete={isComplete}
-                    onNumberClick={handleNumberClick}
-                    onClear={handleClear}
+                    isComplete={isComplete || !timerActive}
+                    onNumberClick={timerActive ? handleNumberClick : () => {}}
+                    onClear={timerActive ? handleClear : () => {}}
                     selectedIndex={selectedIndex}
                 />
 
@@ -260,4 +297,19 @@ const CompleteMessage = styled.div`
   margin-top: 20px;
   font-size: 18px;
   color: var(--complete-message);
+`;
+
+const PausedOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  pointer-events: all;
+  cursor: pointer;
 `;

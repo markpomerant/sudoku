@@ -25,14 +25,15 @@ import styled from '@emotion/styled';
  * @param {{ cell: object, isSelected: boolean, onClick: () => void }} props - Cell props.
  * @returns {JSX.Element} The rendered cell.
  */
-function SudokuCell({ cell, isSelected, onClick }) {
+function SudokuCell({ cell, isSelected, onClick, disabled }) {
   return (
     <CellDiv
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       isInitial={cell.isInitial}
       isIncorrect={cell.isIncorrect}
       isSelected={isSelected}
       cellIndex={cell.index}
+      disabled={disabled}
     >
       {cell.value !== 0 ? (
         cell.value
@@ -56,10 +57,10 @@ function SudokuCell({ cell, isSelected, onClick }) {
 /**
  * Renders the Sudoku puzzle grid.
  *
- * @param {{ cells: object[], selectedIndex: number, onCellClick: (index: number) => void }} props - Grid props.
+ * @param {{ cells: object[], selectedIndex: number, onSelect: (index: number) => void, disabled?: boolean }} props - Grid props.
  * @returns {JSX.Element} The rendered grid.
  */
-export default function SudokuGrid({ cells, selectedIndex, onSelect }) {
+export default function SudokuGrid({ cells, selectedIndex, onSelect, disabled }) {
   return (
     <GridContainer>
       {cells.map((cell, i) => (
@@ -68,6 +69,7 @@ export default function SudokuGrid({ cells, selectedIndex, onSelect }) {
           cell={{ ...cell, index: i }}
           isSelected={i === selectedIndex}
           onClick={() => onSelect(i)}
+          disabled={disabled}
         />
       ))}
     </GridContainer>
@@ -92,7 +94,8 @@ const CellDiv = styled.div`
   font-size: 18px;
   position: relative;
   text-align: center;
-  cursor: ${({ isInitial, isIncorrect }) => (isInitial ? 'default' : 'pointer')};
+  cursor: ${({ isInitial, isIncorrect, disabled }) =>
+    disabled ? 'not-allowed' : isInitial ? 'default' : 'pointer'};
   background-color: ${({ isInitial, isIncorrect, isSelected }) =>
     isInitial ? 'var(--cell-initial-bg)' : isIncorrect ? 'var(--cell-incorrect-bg)' : isSelected ? 'var(--cell-selected-bg)' : 'var(--primary-bg)'};
   border: 1px solid var(--cell-border);

@@ -64,10 +64,9 @@ export function CenterNoteIcon({ size = 20 }) {
 }
 
 /**
- * Button to toggle pencil and center note modes in Sudoku.
+ * Button group for pencil and center note toggle.
  *
- * @param {{ noteMode: boolean, onToggle: () => void, centerNoteMode: boolean, onCenterToggle: () => void }} props - Component props.
- * @returns {JSX.Element} The rendered button.
+ * @param {{ noteMode: boolean, onToggle: function, centerNoteMode: boolean, onCenterToggle: function }} props
  */
 export default function NoteToggleButton({ noteMode, onToggle, centerNoteMode, onCenterToggle }) {
   return (

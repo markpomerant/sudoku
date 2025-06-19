@@ -26,7 +26,7 @@ import styled from '@emotion/styled'
  * }} props - Component props.
  * @returns {JSX.Element} The rendered component.
  */
-export default function GameHeader({ difficulty, elapsedSeconds, children }) {
+export default function GameHeader({ difficulty, elapsedSeconds, timerActive, onPauseToggle, children }) {
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60)
       .toString()
@@ -42,6 +42,7 @@ export default function GameHeader({ difficulty, elapsedSeconds, children }) {
         <TimerSpan>
           🕒 {formatTime(elapsedSeconds)}
         </TimerSpan>
+
       </HeaderTitle>
       {children}
     </HeaderContainer>
@@ -65,4 +66,18 @@ const HeaderTitle = styled.h2`
 const TimerSpan = styled.span`
   font-size: 14px;
   color: var(--timer-color);
+`;
+
+const PauseButton = styled.button`
+  margin-left: 12px;
+  font-size: 18px;
+  background: none;
+  border: none;
+  color: var(--timer-color);
+  cursor: pointer;
+  outline: none;
+  transition: color 0.2s;
+  &:hover {
+    color: var(--accent);
+  }
 `;
