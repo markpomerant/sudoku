@@ -16,6 +16,7 @@ import SudokuGrid from "./sudoku-grid";
 import NumberPad from "./number-pad";
 import NoteToggleButton from "./note-toggle-button";
 import DifficultySelector from "./difficulty-selector";
+import Confetti from "./Confetti";
 
 import { useSudokuState } from "../hooks/use-sudoku-state";
 import { useTimer } from "../hooks/use-timer";
@@ -175,6 +176,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
 
         return (
             <BoardContainer>
+                {isComplete && <Confetti />}
                 <GameHeader difficulty={difficulty} elapsedSeconds={elapsedSeconds}>
                     <SettingsMenu
                         show={showSettings}
