@@ -154,10 +154,23 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             );
         };
 
+        const handleNewGame = (level) => {
+            setDifficulty(null);
+            setPuzzleState(null);
+            setNoteMode(false);
+            setCenterNoteMode(false);
+            setShowSettings(false);
+            setHighlightUsedNumbers(false);
+            setShowMistakes(false);
+            setSelectedIndex(null);
+            resetTimer();
+            startNewGame(level);
+        };
+
         if (!hasLoaded) return null;
 
         if (!difficulty || !puzzleState) {
-            return <DifficultySelector onSelect={(level) => { startNewGame(level); resetTimer(); setShowSettings(false); }} />
+            return <DifficultySelector onSelect={handleNewGame} />
         }
 
         return (
@@ -168,16 +181,28 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         onNewGame={() => {
                             setDifficulty(null);
                             setPuzzleState(null);
+                            setNoteMode(false);
+                            setCenterNoteMode(false);
+                            setShowSettings(false);
+                            setHighlightUsedNumbers(false);
+                            setShowMistakes(false);
+                            setSelectedIndex(null);
+                            resetTimer();
                         }}
                         onRestart={() => {
                             handleRestartGame();
                             setShowSettings(false);
                             resetTimer();
+                            setNoteMode(false);
+                            setCenterNoteMode(false);
+                            setHighlightUsedNumbers(false);
+                            setShowMistakes(false);
+                            setSelectedIndex(null);
                         }}
                         showMistakes={showMistakes}
-                        onToggleMistakes={() => { setShowMistakes(!showMistakes); setShowSettings(false); }}
+                        onToggleMistakes={() => { setShowMistakes(!showMistakes);  }}
                         highlightUsedNumbers={highlightUsedNumbers}
-                        onToggleHighlight={() => { setHighlightUsedNumbers(!highlightUsedNumbers); setShowSettings(false); }}
+                        onToggleHighlight={() => { setHighlightUsedNumbers(!highlightUsedNumbers); }}
                         onToggle={() => setShowSettings(!showSettings)}
                         theme={theme}
                         onThemeChange={setTheme}

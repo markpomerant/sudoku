@@ -124,6 +124,7 @@ export function useSudokuState() {
     isComplete,
     highlightUsedNumbers,
     showMistakes,
+    
 
     // puzzle metadata
     puzzleState,
@@ -142,5 +143,6 @@ export function useSudokuState() {
     handleClear,
     handleNumberClick,
     setPuzzleState,
+    setIsComplete,
   };
 }
