@@ -15,6 +15,7 @@
 
 import React from "react";
 import styled from '@emotion/styled'
+import { TimerIcon } from "./timer-icon";
 
 /**
  * Displays the Sudoku game header with difficulty, timer, and optional children.
@@ -37,14 +38,18 @@ export default function GameHeader({ difficulty, elapsedSeconds, timerActive, on
 
   return (
     <HeaderContainer>
-      <HeaderTitle>
-        Sudoku ({difficulty}) &nbsp;
+      <HeaderSide>
         <TimerSpan>
-          🕒 {formatTime(elapsedSeconds)}
+          <TimerIcon size={16} />
+          {formatTime(elapsedSeconds)}
         </TimerSpan>
-
+      </HeaderSide>
+      <HeaderTitle>
+        Sudoku ({difficulty})
       </HeaderTitle>
-      {children}
+      <HeaderSide style={{ justifyContent: 'flex-end' }}>
+        {children}
+      </HeaderSide>
     </HeaderContainer>
   );
 }
@@ -52,20 +57,46 @@ export default function GameHeader({ difficulty, elapsedSeconds, timerActive, on
 // Styled components
 const HeaderContainer = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  position: relative;
   background: var(--header-bg);
+  min-height: 48px;
+  padding: 0 16px;
+  width: 100%;
 `;
 
 const HeaderTitle = styled.h2`
   margin: 0;
   color: var(--header-text);
+  text-align: center;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+`;
+
+const HeaderSide = styled.div`
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  z-index: 2;
 `;
 
 const TimerSpan = styled.span`
   font-size: 14px;
   color: var(--timer-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  
 `;
 
 const PauseButton = styled.button`
