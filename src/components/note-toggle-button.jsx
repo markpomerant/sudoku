@@ -13,6 +13,7 @@
 //   <NoteToggleButton noteMode={noteMode} onToggle={handleToggle} />
 
 import React from "react";
+import styled from '@emotion/styled'
 
 /**
  * SVG pencil icon for note mode toggle button.
@@ -46,38 +47,41 @@ export function PencilIcon({ size = 20 }) {
  */
 export default function NoteToggleButton({ noteMode, onToggle }) {
   return (
-    <button
+    <StyledButton
       onClick={onToggle}
-      style={{
-        position: "relative",
-        width: 40,
-        height: 40,
-        cursor: "pointer",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        backgroundColor: noteMode ? "#e0f7fa" : "#f9f9f9",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      noteMode={noteMode}
       aria-label="Toggle pencil note mode"
     >
       <PencilIcon size={20} />
-      <span
-        style={{
-          position: "absolute",
-          top: -6,
-          right: -6,
-          backgroundColor: noteMode ? "#4caf50" : "#ccc",
-          color: "white",
-          fontSize: "10px",
-          padding: "1px 4px",
-          borderRadius: "10px",
-          fontWeight: "bold",
-        }}
-      >
+      <StatusSpan noteMode={noteMode}>
         {noteMode ? "on" : "off"}
-      </span>
-    </button>
+      </StatusSpan>
+    </StyledButton>
   );
 }
+
+// Styled components
+const StyledButton = styled.button`
+  position: relative;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: ${({ noteMode }) => (noteMode ? '#e0f7fa' : '#f9f9f9')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StatusSpan = styled.span`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: ${({ noteMode }) => (noteMode ? '#4caf50' : '#ccc')};
+  color: white;
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 10px;
+  font-weight: bold;
+`;

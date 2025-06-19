@@ -9,6 +9,7 @@
 //   <TimerDisplay seconds={elapsedSeconds} />
 
 import React from "react";
+import styled from '@emotion/styled';
 
 /**
  * Displays the elapsed time in MM:SS format.
@@ -26,6 +27,12 @@ export default function TimerDisplay({ seconds }) {
   };
 
   return (
-    <span style={{ fontSize: "14px", color: "#777" }}>🕒 {formatTime(seconds)}</span>
+    <TimerStyledSpan>🕒 {formatTime(seconds)}</TimerStyledSpan>
   );
 }
+
+// Styled components
+const TimerStyledSpan = styled.span`
+  font-size: 14px;
+  color: #777;
+`;

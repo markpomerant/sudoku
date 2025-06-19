@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 // SettingsMenu.jsx
 // ---------------
 // This component renders a settings menu for the Sudoku game, allowing toggling of various options and game actions.
@@ -16,6 +17,7 @@
 //   <SettingsMenu show={bool} onToggle={fn} onRestart={fn} onNewGame={fn} showMistakes={bool} onToggleMistakes={fn} highlightUsedNumbers={bool} onToggleHighlight={fn} />
 
 import React from "react";
+import styled from '@emotion/styled'
 
 /**
  * Renders the settings menu for Sudoku game options and actions.
@@ -44,94 +46,97 @@ export default function SettingsMenu({
 }) {
  
   return (
-    <div style={{ position: "relative" }}>
-      <button
-        onClick={onToggle}
-        style={{
-          fontSize: "14px",
-          padding: "4px 8px",
-          cursor: "pointer",
-        }}
-      >
+    <MenuContainer>
+      <SettingsButton onClick={onToggle}>
         ⚙️
-      </button>
+      </SettingsButton>
 
       {show && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            right: 0,
-            backgroundColor: "white",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "10px",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-            zIndex: 10,
-            minWidth: "180px",
-            whiteSpace: "nowrap",
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-          }}
-        >
-          <label style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
+        <DropdownMenu>
+          <StyledLabel>
             <input
               type="checkbox"
               checked={highlightUsedNumbers}
               onChange={(e) => {
                 onToggleHighlight(e.target.checked);
               }}
-              style={{ marginRight: "8px" }}
             />
             Highlight Used Numbers
-          </label>
+          </StyledLabel>
 
-          <label style={{ display: "flex", alignItems: "center", fontSize: "14px" }}>
+          <StyledLabel>
             <input
               type="checkbox"
               checked={showMistakes}
               onChange={(e) => {
                 onToggleMistakes(e.target.checked);
               }}
-              style={{ marginRight: "8px" }}
             />
             Show Mistakes
-          </label>
+          </StyledLabel>
 
-          <hr style={{ margin: "8px 0" }} />
+          <StyledHr />
 
-          <button
-            onClick={onRestart}
-            style={{
-              width: "100%",
-              padding: "6px",
-              fontSize: "14px",
-              cursor: "pointer",
-              backgroundColor: "#fff",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          >
+          <MenuActionButton onClick={onRestart}>
             🔄 Restart Game
-          </button>
+          </MenuActionButton>
 
-          <button
-            onClick={onNewGame}
-            style={{
-              width: "100%",
-              padding: "6px",
-              fontSize: "14px",
-              cursor: "pointer",
-              backgroundColor: "#fff",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          >
+          <MenuActionButton onClick={onNewGame}>
             🔄 New Game
-          </button>
-        </div>
+          </MenuActionButton>
+        </DropdownMenu>
       )}
-    </div>
+    </MenuContainer>
   );
 }
+
+// Styled components
+const MenuContainer = styled.div`
+  position: relative;
+`;
+
+const SettingsButton = styled.button`
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 10;
+  min-width: 180px;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const StyledLabel = styled.label`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  input {
+    margin-right: 8px;
+  }
+`;
+
+const StyledHr = styled.hr`
+  margin: 8px 0;
+`;
+
+const MenuActionButton = styled.button`
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;

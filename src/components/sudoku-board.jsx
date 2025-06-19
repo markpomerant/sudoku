@@ -9,6 +9,7 @@
 
 import React from "react";
 import { useState, useEffect } from "react";
+import styled from '@emotion/styled';
 import GameHeader from "./game-header";
 import SettingsMenu from "./setting-menu";
 import SudokuGrid from "./sudoku-grid";
@@ -133,7 +134,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
         }
 
         return (
-            <div style={{ userSelect: "none", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+            <BoardContainer>
                 <GameHeader difficulty={difficulty} elapsedSeconds={elapsedSeconds}>
                     <SettingsMenu
                         show={showSettings}
@@ -172,10 +173,26 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                 />
 
                 {isComplete && (
-                    <div style={{ marginTop: 20, fontSize: "18px", color: "green" }}>
+                    <CompleteMessage>
                         🎉 Sudoku Complete!
-                    </div>
+                    </CompleteMessage>
                 )}
-            </div>
+            </BoardContainer>
         );
     }
+
+// Styled components
+const BoardContainer = styled.div`
+  user-select: none;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+`;
+
+const CompleteMessage = styled.div`
+  margin-top: 20px;
+  font-size: 18px;
+  color: green;
+`;

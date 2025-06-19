@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 // GameHeader.jsx
 // -------------
 // This React component displays the Sudoku game header, including the current difficulty, elapsed time, and any additional child elements.
@@ -13,6 +14,7 @@
 // The component formats the elapsed time as MM:SS and displays it alongside the difficulty.
 
 import React from "react";
+import styled from '@emotion/styled'
 
 /**
  * Displays the Sudoku game header with difficulty, timer, and optional children.
@@ -34,14 +36,31 @@ export default function GameHeader({ difficulty, elapsedSeconds, children }) {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "12px" }}>
-      <h2 style={{ margin: 0 }}>
+    <HeaderContainer>
+      <HeaderTitle>
         Sudoku ({difficulty}) &nbsp;
-        <span style={{ fontSize: "14px", color: "#777" }}>
+        <TimerSpan>
           🕒 {formatTime(elapsedSeconds)}
-        </span>
-      </h2>
+        </TimerSpan>
+      </HeaderTitle>
       {children}
-    </div>
+    </HeaderContainer>
   );
 }
+
+// Styled components
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+`;
+
+const HeaderTitle = styled.h2`
+  margin: 0;
+`;
+
+const TimerSpan = styled.span`
+  font-size: 14px;
+  color: #777;
+`;
