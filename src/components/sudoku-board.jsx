@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GameHeader from "./game-header";
 import SettingsMenu from "./setting-menu";
 import SudokuGrid from "./sudoku-grid";
@@ -34,6 +34,7 @@ export default function SudokuBoard() {
         isActive: timerActive,
         stop: stopTimer,
         reset: resetTimer,
+        setElapsedSeconds
     } = useTimer(true);
     const [showSettings, setShowSettings] = useState(false);
     const [noteMode, setNoteMode] = React.useState(false);
@@ -49,7 +50,10 @@ export default function SudokuBoard() {
 
     useValidation(cells, setCells, puzzleState, showMistakes, setIsComplete, stopTimer);
 
-    useLocalStorageGameState({
+    const {
+        hasLoaded,
+        restoredState
+    } = useLocalStorageGameState({
         puzzleState,
         originalCells,
         cells,
@@ -59,6 +63,19 @@ export default function SudokuBoard() {
         highlightUsedNumbers,
         showMistakes,
     });
+
+    useEffect(() => {
+        if (restoredState && !difficulty && !puzzleState) {
+            setDifficulty(restoredState.difficulty);
+            setPuzzleState(restoredState.puzzleState);
+            setCells(restoredState.cells);
+            setNoteMode(restoredState.noteMode);
+            setHighlightUsedNumbers(restoredState.highlightUsedNumbers);
+            setShowMistakes(restoredState.showMistakes);
+            setElapsedSeconds(restoredState.elapsedSeconds);
+            
+        }
+    }, [restoredState]);
 
     const handleClear = () => {
         if (selectedIndex == null || isComplete) return;
@@ -95,6 +112,8 @@ export default function SudokuBoard() {
             })
         );
     };
+
+    if (!hasLoaded) return null;
 
     if (!difficulty || !puzzleState) {
         return <DifficultySelector onSelect={(level) => { startNewGame(level); resetTimer(); setShowSettings(false); }} />
