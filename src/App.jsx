@@ -246,6 +246,9 @@ export function SudokuBoard() {
                 zIndex: 10,
                 minWidth: "180px",
                 whiteSpace: "nowrap",
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
               }}
             >
               <label style={{ display: "flex", alignItems: "center", fontSize: "14px", marginBottom: "8px" }}>
@@ -291,6 +294,25 @@ export function SudokuBoard() {
                 }}
               >
                 🔄 Restart Game
+              </button>
+
+              <button
+                onClick={() => {
+                  setDifficulty(null);
+                  setPuzzleState(null);
+                  setShowSettings(false);
+                }}
+                style={{
+                  width: "100%",
+                  padding: "6px",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  backgroundColor: "#fff",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                }}
+              >
+                🔄 New Game
               </button>
             </div>
           )}
@@ -476,18 +498,6 @@ export function SudokuBoard() {
         </div>
       )}
 
-      {/* New Game Button */}
-      <div style={{ marginTop: 20 }}>
-        <button
-          onClick={() => {
-            setDifficulty(null);
-            setPuzzleState(null);
-          }}
-          style={{ fontSize: "16px", padding: "8px 16px" }}
-        >
-          🔄 New Game
-        </button>
-      </div>
     </div>
   );
 }
