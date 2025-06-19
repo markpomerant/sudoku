@@ -69,6 +69,42 @@ export function SudokuBoard() {
   const [showSettings, setShowSettings] = useState(false);
   const [originalCells, setOriginalCells] = useState([]);
   const [highlightUsedNumbers, setHighlightUsedNumbers] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("sudoku-save");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Restore state: puzzle, cells, time, toggles, etc.
+        setPuzzleState(parsed.puzzleState);
+        setOriginalCells(parsed.originalCells);
+        setCells(parsed.cells);
+        setElapsedSeconds(parsed.elapsedSeconds);
+        setDifficulty(parsed.difficulty);
+        setNoteMode(parsed.noteMode);
+        setHighlightUsedNumbers(parsed.highlightUsedNumbers);
+        setShowMistakes(parsed.showMistakes);
+      } catch (e) {
+        console.warn("Failed to parse saved state:", e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "sudoku-save",
+      JSON.stringify({
+        puzzleState,
+        originalCells,
+        cells,
+        elapsedSeconds,
+        difficulty,
+        noteMode,
+        highlightUsedNumbers,
+        showMistakes,
+      })
+    );
+  }, [puzzleState, originalCells, cells, elapsedSeconds, difficulty, noteMode, highlightUsedNumbers, showMistakes]);
   useEffect(() => {
     if (!timerActive) return;
 
@@ -87,17 +123,37 @@ export function SudokuBoard() {
     setElapsedSeconds(0);
     setTimerActive(true);
   };
-  const startNewGame = (level) => {
-    const newPuzzle = generatePuzzle(level);
-    setDifficulty(level);
-    setOriginalCells(toCellState(newPuzzle.puzzle, newPuzzle.solution));
-    setPuzzleState(newPuzzle);
-    setCells(toCellState(newPuzzle.puzzle, newPuzzle.solution));
-    setSelectedIndex(null);
-    setIsComplete(false);
-    setElapsedSeconds(0);
-    setTimerActive(true);
-  };
+const startNewGame = (level) => {
+  const newPuzzle = generatePuzzle(level);
+  const initialCells = toCellState(newPuzzle.puzzle, newPuzzle.solution);
+
+  setDifficulty(level);
+  setOriginalCells(initialCells);
+  setPuzzleState(newPuzzle);
+  setCells(initialCells);
+  setSelectedIndex(null);
+  setIsComplete(false);
+  setElapsedSeconds(0);
+  setTimerActive(true);
+  setNoteMode(false);
+  setHighlightUsedNumbers(false);
+  setShowMistakes(false);
+
+
+  localStorage.setItem(
+    "sudoku-save",
+    JSON.stringify({
+      puzzleState: newPuzzle,
+      originalCells: initialCells,
+      cells: initialCells,
+      elapsedSeconds: 0,
+      difficulty: level,
+      noteMode: false,
+      highlightUsedNumbers: false,
+      showMistakes: false,
+    })
+  );
+};
 
   const handleCellClick = (index) => {
     if (cells[index].isInitial) return;
@@ -301,6 +357,7 @@ export function SudokuBoard() {
                   setDifficulty(null);
                   setPuzzleState(null);
                   setShowSettings(false);
+                  localStorage.removeItem("sudoku-save");
                 }}
                 style={{
                   width: "100%",
@@ -503,11 +560,9 @@ export function SudokuBoard() {
 }
 
 function App() {
-
-  const { puzzle, solution } = generatePuzzle("easy")
   return (
     <div className="App">
-      <SudokuBoard puzzle={puzzle} solution={solution} />
+      <SudokuBoard />
     </div>
   );
 }
