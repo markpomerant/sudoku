@@ -67,8 +67,9 @@ const StyledButton = styled.button`
   height: 40px;
   cursor: pointer;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: ${({ noteMode }) => (noteMode ? '#e0f7fa' : '#f9f9f9')};
+  border: 1px solid var(--button-border);
+  background-color: ${({ noteMode }) => noteMode ? 'var(--button-bg)' : 'var(--button-bg-alt)'};
+  color: var(--button-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,8 +79,8 @@ const StatusSpan = styled.span`
   position: absolute;
   top: -6px;
   right: -6px;
-  background-color: ${({ noteMode }) => (noteMode ? '#4caf50' : '#ccc')};
-  color: white;
+  background-color: ${({ noteMode }) => noteMode ? 'var(--accent)' : 'var(--button-border)'};
+  color: #fff;
   font-size: 10px;
   padding: 1px 4px;
   border-radius: 10px;

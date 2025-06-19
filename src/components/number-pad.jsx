@@ -87,9 +87,15 @@ const NumberButton = styled.button`
   margin: 0 4px;
   font-size: 16px;
   cursor: pointer;
-  background-color: ${({ used }) => (used ? '#ddd' : 'white')};
-  border: ${({ used }) => (used ? '2px solid #aaa' : '1px solid #ccc')};
-  color: ${({ used }) => (used ? '#999' : 'black')};
+  background-color: ${({ used }) => used ? 'var(--secondary-bg)' : 'var(--button-bg-alt)'};
+  border: ${({ used }) => used ? '2px solid var(--button-border)' : '1px solid var(--button-border)'};
+  color: ${({ used }) => used ? 'var(--button-border)' : 'var(--button-text)'};
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+  &:hover {
+    background: var(--button-bg);
+    border-color: var(--button-border-active);
+  }
 `;
 
 const ClearButton = styled.button`
@@ -98,7 +104,13 @@ const ClearButton = styled.button`
   margin: 0 8px;
   font-size: 14px;
   cursor: pointer;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
-  color: #333;
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--button-border);
+  color: var(--button-text);
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+  &:hover {
+    background: var(--button-bg);
+    border-color: var(--button-border-active);
+  }
 `;

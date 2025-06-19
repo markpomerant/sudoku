@@ -54,6 +54,12 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
         const [noteMode, setNoteMode] = React.useState(false);
         const [highlightUsedNumbers, setHighlightUsedNumbers] = React.useState(false);
         const [showMistakes, setShowMistakes] = React.useState(false);
+        const [theme, setTheme] = React.useState('light');
+
+        React.useEffect(() => {
+            document.body.classList.remove('theme-light', 'theme-dark', 'theme-ocean', 'theme-redsands');
+            document.body.classList.add(`theme-${theme}`);
+        }, [theme]);
 
         const {
             selectedIndex,
@@ -152,6 +158,8 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         highlightUsedNumbers={highlightUsedNumbers}
                         onToggleHighlight={() => { setHighlightUsedNumbers(!highlightUsedNumbers); setShowSettings(false); }}
                         onToggle={() => setShowSettings(!showSettings)}
+                        theme={theme}
+                        onThemeChange={setTheme}
                     />
                 </GameHeader>
 
@@ -189,10 +197,13 @@ const BoardContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  min-height: 100vh;
 `;
 
 const CompleteMessage = styled.div`
   margin-top: 20px;
   font-size: 18px;
-  color: green;
+  color: var(--complete-message);
 `;

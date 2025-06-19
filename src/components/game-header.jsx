@@ -54,13 +54,15 @@ const HeaderContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
+  background: var(--header-bg);
 `;
 
 const HeaderTitle = styled.h2`
   margin: 0;
+  color: var(--header-text);
 `;
 
 const TimerSpan = styled.span`
   font-size: 14px;
-  color: #777;
+  color: var(--timer-color);
 `;

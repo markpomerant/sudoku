@@ -48,4 +48,13 @@ const DifficultyButton = styled.button`
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  background: var(--button-bg-alt);
+  color: var(--button-text);
+  border: 1px solid var(--button-border);
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+  &:hover {
+    background: var(--button-bg);
+    border-color: var(--button-border-active);
+  }
 `;

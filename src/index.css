@@ -5,6 +5,97 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Theme variables: default to Light */
+  --primary-bg: #fff;
+  --primary-text: #222;
+  --secondary-bg: #f5f5f5;
+  --accent: #1976d2;
+  --button-bg: #e0f7fa;
+  --button-bg-alt: #f9f9f9;
+  --button-text: #222;
+  --button-border: #ccc;
+  --button-border-active: #1976d2;
+  --header-bg: #fff;
+  --header-text: #222;
+  --timer-color: #777;
+  --cell-initial-bg: #eee;
+  --cell-selected-bg: #cceeff;
+  --cell-incorrect-bg: #fdd;
+  --cell-border: gray;
+  --cell-border-strong: black;
+  --note-bg: #fff;
+  --note-color: #666;
+  --complete-message: green;
+}
+
+body.theme-dark {
+  --primary-bg: #18191a;
+  --primary-text: #f5f6fa;
+  --secondary-bg: #23272e;
+  --accent: #00bcd4;
+  --button-bg: #23272e;
+  --button-bg-alt: #18191a;
+  --button-text: #f5f6fa;
+  --button-border: #333;
+  --button-border-active: #00bcd4;
+  --header-bg: #23272e;
+  --header-text: #f5f6fa;
+  --timer-color: #b0b0b0;
+  --cell-initial-bg: #222;
+  --cell-selected-bg: #003c4d;
+  --cell-incorrect-bg: #4d2323;
+  --cell-border: #444;
+  --cell-border-strong: #888;
+  --note-bg: #23272e;
+  --note-color: #b0b0b0;
+  --complete-message: #00bcd4;
+}
+
+body.theme-ocean {
+  --primary-bg: #0e2233;
+  --primary-text: #e0f7fa;
+  --secondary-bg: #17445e;
+  --accent: #26c6da;
+  --button-bg: #17445e;
+  --button-bg-alt: #0e2233;
+  --button-text: #e0f7fa;
+  --button-border: #26c6da;
+  --button-border-active: #00acc1;
+  --header-bg: #17445e;
+  --header-text: #e0f7fa;
+  --timer-color: #b2ebf2;
+  --cell-initial-bg: #145374;
+  --cell-selected-bg: #26c6da;
+  --cell-incorrect-bg: #ff8a80;
+  --cell-border: #26c6da;
+  --cell-border-strong: #00acc1;
+  --note-bg: #17445e;
+  --note-color: #b2ebf2;
+  --complete-message: #26c6da;
+}
+
+body.theme-redsands {
+  --primary-bg: #2d1a13;
+  --primary-text: #ffe0b2;
+  --secondary-bg: #4e342e;
+  --accent: #ff7043;
+  --button-bg: #4e342e;
+  --button-bg-alt: #2d1a13;
+  --button-text: #ffe0b2;
+  --button-border: #ff7043;
+  --button-border-active: #ffab91;
+  --header-bg: #4e342e;
+  --header-text: #ffe0b2;
+  --timer-color: #ffab91;
+  --cell-initial-bg: #3e2723;
+  --cell-selected-bg: #ff7043;
+  --cell-incorrect-bg: #b71c1c;
+  --cell-border: #ff7043;
+  --cell-border-strong: #ffab91;
+  --note-bg: #4e342e;
+  --note-color: #ffab91;
+  --complete-message: #ff7043;
 }
 
 code {

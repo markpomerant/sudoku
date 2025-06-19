@@ -78,9 +78,10 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(9, 40px);
   gap: 2px;
   padding: 10px;
-  border: 2px solid black;
+  border: 2px solid var(--cell-border-strong);
   width: fit-content;
   margin: 0 auto;
+  background: var(--primary-bg);
 `;
 
 const CellDiv = styled.div`
@@ -91,13 +92,14 @@ const CellDiv = styled.div`
   text-align: center;
   cursor: ${({ isInitial, isIncorrect }) => (isInitial ? 'default' : 'pointer')};
   background-color: ${({ isInitial, isIncorrect, isSelected }) =>
-    isInitial ? '#eee' : isIncorrect ? '#fdd' : isSelected ? '#cceeff' : 'white'};
-  border: 1px solid gray;
-  border-top: ${({ cellIndex }) => Math.floor(cellIndex / 9) % 3 === 0 ? '2px solid black' : '1px solid gray'};
-  border-left: ${({ cellIndex }) => cellIndex % 9 % 3 === 0 ? '2px solid black' : '1px solid gray'};
+    isInitial ? 'var(--cell-initial-bg)' : isIncorrect ? 'var(--cell-incorrect-bg)' : isSelected ? 'var(--cell-selected-bg)' : 'var(--primary-bg)'};
+  border: 1px solid var(--cell-border);
+  border-top: ${({ cellIndex }) => Math.floor(cellIndex / 9) % 3 === 0 ? '2px solid var(--cell-border-strong)' : '1px solid var(--cell-border)'};
+  border-left: ${({ cellIndex }) => cellIndex % 9 % 3 === 0 ? '2px solid var(--cell-border-strong)' : '1px solid var(--cell-border)'};
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--primary-text);
 `;
 
 const NotesDiv = styled.div`
@@ -111,7 +113,8 @@ const NotesDiv = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   line-height: 1.2;
-  color: #666;
+  color: var(--note-color);
+  background: var(--note-bg);
 `;
 
 const NoteNumber = styled.div`

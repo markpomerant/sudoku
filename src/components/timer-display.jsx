@@ -34,5 +34,5 @@ export default function TimerDisplay({ seconds }) {
 // Styled components
 const TimerStyledSpan = styled.span`
   font-size: 14px;
-  color: #777;
+  color: var(--timer-color);
 `;

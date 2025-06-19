@@ -43,6 +43,8 @@ export default function SettingsMenu({
   onToggleMistakes,
   highlightUsedNumbers,
   onToggleHighlight,
+  theme,
+  onThemeChange,
 }) {
  
   return (
@@ -77,6 +79,18 @@ export default function SettingsMenu({
 
           <StyledHr />
 
+          <StyledLabel>
+            Theme:
+            <ThemeSelect value={theme} onChange={e => onThemeChange(e.target.value)}>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="ocean">Ocean</option>
+              <option value="redsands">Red Sands</option>
+            </ThemeSelect>
+          </StyledLabel>
+
+          <StyledHr />
+
           <MenuActionButton onClick={onRestart}>
             🔄 Restart Game
           </MenuActionButton>
@@ -99,14 +113,23 @@ const SettingsButton = styled.button`
   font-size: 14px;
   padding: 4px 8px;
   cursor: pointer;
+  background: var(--button-bg-alt);
+  color: var(--button-text);
+  border: 1px solid var(--button-border);
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+  &:hover {
+    background: var(--button-bg);
+    border-color: var(--button-border-active);
+  }
 `;
 
 const DropdownMenu = styled.div`
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: var(--primary-bg);
+  border: 1px solid var(--button-border);
   border-radius: 4px;
   padding: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
@@ -122,6 +145,7 @@ const StyledLabel = styled.label`
   display: flex;
   align-items: center;
   font-size: 14px;
+  color: var(--primary-text);
   input {
     margin-right: 8px;
   }
@@ -129,6 +153,7 @@ const StyledLabel = styled.label`
 
 const StyledHr = styled.hr`
   margin: 8px 0;
+  border-color: var(--button-border);
 `;
 
 const MenuActionButton = styled.button`
@@ -136,7 +161,23 @@ const MenuActionButton = styled.button`
   padding: 6px;
   font-size: 14px;
   cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: var(--button-bg-alt);
+  border: 1px solid var(--button-border);
   border-radius: 4px;
+  color: var(--button-text);
+  transition: background 0.2s, color 0.2s;
+  &:hover {
+    background: var(--button-bg);
+    border-color: var(--button-border-active);
+  }
+`;
+
+const ThemeSelect = styled.select`
+  margin-left: 8px;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--button-border);
+  background: var(--secondary-bg);
+  color: var(--primary-text);
 `;
