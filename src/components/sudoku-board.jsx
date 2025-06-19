@@ -193,6 +193,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         }}
                         onRestart={() => {
                             handleRestartGame();
+                            setIsComplete(false);
                             setShowSettings(false);
                             resetTimer();
                             setNoteMode(false);
