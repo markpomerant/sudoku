@@ -1,5 +1,25 @@
+// NoteToggleButton.jsx
+// --------------------
+// This file contains the NoteToggleButton component for toggling pencil note mode in Sudoku, and a PencilIcon SVG component.
+//
+// PencilIcon Props:
+//   - size (number): The size of the icon in pixels. Default is 20.
+//
+// NoteToggleButton Props:
+//   - noteMode (boolean): Whether note mode is currently active.
+//   - onToggle (function): Callback invoked when the button is clicked.
+//
+// Usage:
+//   <NoteToggleButton noteMode={noteMode} onToggle={handleToggle} />
+
 import React from "react";
 
+/**
+ * SVG pencil icon for note mode toggle button.
+ *
+ * @param {{ size?: number }} props - Icon props.
+ * @returns {JSX.Element} The rendered SVG icon.
+ */
 export function PencilIcon({ size = 20 }) {
   return (
     <svg
@@ -18,6 +38,12 @@ export function PencilIcon({ size = 20 }) {
   );
 }
 
+/**
+ * Button to toggle pencil note mode in Sudoku.
+ *
+ * @param {{ noteMode: boolean, onToggle: () => void }} props - Component props.
+ * @returns {JSX.Element} The rendered button.
+ */
 export default function NoteToggleButton({ noteMode, onToggle }) {
   return (
     <button

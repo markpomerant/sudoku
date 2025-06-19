@@ -1,5 +1,37 @@
+// SettingsMenu.jsx
+// ---------------
+// This component renders a settings menu for the Sudoku game, allowing toggling of various options and game actions.
+//
+// Props:
+//   - show (boolean): Whether the settings menu is visible.
+//   - onToggle (function): Callback to toggle the menu visibility.
+//   - onRestart (function): Callback to restart the current game.
+//   - onNewGame (function): Callback to start a new game.
+//   - showMistakes (boolean): Whether to show mistakes.
+//   - onToggleMistakes (function): Callback to toggle mistake highlighting.
+//   - highlightUsedNumbers (boolean): Whether to highlight used numbers.
+//   - onToggleHighlight (function): Callback to toggle highlighting of used numbers.
+//
+// Usage:
+//   <SettingsMenu show={bool} onToggle={fn} onRestart={fn} onNewGame={fn} showMistakes={bool} onToggleMistakes={fn} highlightUsedNumbers={bool} onToggleHighlight={fn} />
+
 import React from "react";
 
+/**
+ * Renders the settings menu for Sudoku game options and actions.
+ *
+ * @param {{
+ *   show: boolean,
+ *   onToggle: () => void,
+ *   onRestart: () => void,
+ *   onNewGame: () => void,
+ *   showMistakes: boolean,
+ *   onToggleMistakes: () => void,
+ *   highlightUsedNumbers: boolean,
+ *   onToggleHighlight: () => void
+ * }} props - Component props.
+ * @returns {JSX.Element} The rendered settings menu.
+ */
 export default function SettingsMenu({
   show,
   onToggle,

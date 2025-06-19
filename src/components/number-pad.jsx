@@ -1,5 +1,31 @@
+// NumberPad.jsx
+// -------------
+// This component renders a number pad for Sudoku input, including number buttons and a clear button.
+//
+// Props:
+//   - onNumberClick (function): Callback invoked with the number clicked (1-9).
+//   - onClear (function): Callback invoked when the clear button is clicked.
+//   - isComplete (boolean): Whether the puzzle is complete (disables input).
+//   - usedValues (Set<number>): Set of numbers already used in the current cell.
+//   - selectedIndex (number): The index of the currently selected cell.
+//
+// Usage:
+//   <NumberPad onNumberClick={fn} onClear={fn} isComplete={bool} usedValues={set} selectedIndex={num} />
+
 import React from "react";
 
+/**
+ * Renders a number pad for Sudoku input.
+ *
+ * @param {{
+ *   onNumberClick: (num: number) => void,
+ *   onClear: () => void,
+ *   isComplete: boolean,
+ *   usedValues: Set<number>,
+ *   selectedIndex: number
+ * }} props - Component props.
+ * @returns {JSX.Element} The rendered number pad.
+ */
 export default function NumberPad({
   onNumberClick,
   onClear,

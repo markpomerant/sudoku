@@ -1,5 +1,28 @@
+// SudokuGrid.jsx
+// --------------
+// This file contains the SudokuGrid component for rendering the Sudoku puzzle grid, and the SudokuCell subcomponent.
+//
+// SudokuCell Props:
+//   - cell (object): The cell data (value, notes, index, etc).
+//   - isSelected (boolean): Whether the cell is currently selected.
+//   - onClick (function): Callback for cell click.
+//
+// SudokuGrid Props:
+//   - cells (array): Array of cell objects for the grid.
+//   - selectedIndex (number): The index of the currently selected cell.
+//   - onCellClick (function): Callback for cell click.
+//
+// Usage:
+//   <SudokuGrid cells={cells} selectedIndex={index} onCellClick={fn} />
+
 import React from "react";
 
+/**
+ * Renders a single cell in the Sudoku grid.
+ *
+ * @param {{ cell: object, isSelected: boolean, onClick: () => void }} props - Cell props.
+ * @returns {JSX.Element} The rendered cell.
+ */
 function SudokuCell({ cell, isSelected, onClick }) {
   return (
     <div
@@ -57,6 +80,12 @@ function SudokuCell({ cell, isSelected, onClick }) {
   );
 }
 
+/**
+ * Renders the Sudoku puzzle grid.
+ *
+ * @param {{ cells: object[], selectedIndex: number, onCellClick: (index: number) => void }} props - Grid props.
+ * @returns {JSX.Element} The rendered grid.
+ */
 export default function SudokuGrid({ cells, selectedIndex, onSelect }) {
   return (
     <div
