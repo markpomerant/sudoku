@@ -171,7 +171,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             setCenterNoteMode(false);
             setShowSettings(false);
             setHighlightUsedNumbers(false);
-            setShowMistakes(false);
+            // Keep showMistakes state persistent across new games
             setSelectedIndex(null);
             resetTimer();
             start(); // Ensure timer is unpaused when starting a new game
@@ -229,7 +229,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         setCenterNoteMode(false);
                         setShowSettings(false);
                         setHighlightUsedNumbers(false);
-                        setShowMistakes(false);
+                        // Keep showMistakes state persistent across new games
                         setSelectedIndex(null);
                         resetTimer();
                     }}
@@ -242,7 +242,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         setNoteMode(false);
                         setCenterNoteMode(false);
                         setHighlightUsedNumbers(false);
-                        setShowMistakes(false);
+                        // Keep showMistakes state persistent across restarts
                         setSelectedIndex(null);
                     }}
                     showMistakes={showMistakes}
