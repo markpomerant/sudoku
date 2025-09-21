@@ -60,6 +60,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
         const [centerNoteMode, setCenterNoteMode] = React.useState(false);
         const [highlightUsedNumbers, setHighlightUsedNumbers] = React.useState(false);
         const [showMistakes, setShowMistakes] = React.useState(false);
+        const [highlightContext, setHighlightContext] = React.useState(true); // Default to true for better UX
         const validThemes = [
             'light', 'dark', 'ocean', 'redsands', 'plain', 'matrix', 'solarized', 'vibrant', 'barbie'
         ];
@@ -103,6 +104,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             noteMode,
             highlightUsedNumbers,
             showMistakes,
+            highlightContext,
             timerActive // persist paused state
         });
 
@@ -114,6 +116,9 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                 setNoteMode(restoredState.noteMode);
                 setHighlightUsedNumbers(restoredState.highlightUsedNumbers);
                 setShowMistakes(restoredState.showMistakes);
+                if (restoredState.highlightContext !== undefined) {
+                    setHighlightContext(restoredState.highlightContext);
+                }
                 setElapsedSeconds(restoredState.elapsedSeconds);
                 if (restoredState.timerActive === false) {
                     stopTimer();
@@ -249,6 +254,8 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                     onToggleMistakes={() => { setShowMistakes(!showMistakes);  }}
                     highlightUsedNumbers={highlightUsedNumbers}
                     onToggleHighlight={() => { setHighlightUsedNumbers(!highlightUsedNumbers); }}
+                    highlightContext={highlightContext}
+                    onToggleHighlightContext={() => { setHighlightContext(!highlightContext); }}
                     onToggle={() => setShowSettings(!showSettings)}
                     theme={theme}
                     onThemeChange={setTheme}
@@ -266,6 +273,7 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         onSelect={timerActive ? handleCellClick : () => {}}
                         isComplete={isComplete}
                         disabled={!timerActive}
+                        highlightContext={highlightContext}
                     />
                 </div>
 

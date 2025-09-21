@@ -21,6 +21,7 @@ body {
   --timer-color: #777;
   --cell-initial-bg: #eee;
   --cell-selected-bg: #cceeff;
+  --cell-context-border: #4a90e2;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #222;
   --cell-border: gray;
@@ -51,6 +52,7 @@ body.theme-dark {
   --timer-color: #b0b0b0;
   --cell-initial-bg: #222;
   --cell-selected-bg: #003c4d;
+  --cell-context-border: #00bcd4;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #444;
@@ -81,6 +83,7 @@ body.theme-ocean {
   --timer-color: #b2ebf2;
   --cell-initial-bg: #145374;
   --cell-selected-bg: #26c6da;
+  --cell-context-border: #26c6da;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #26c6da;
@@ -111,6 +114,7 @@ body.theme-redsands {
   --timer-color: #ffab91;
   --cell-initial-bg: #3e2723;
   --cell-selected-bg: #ff7043;
+  --cell-context-border: #ff7043;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #ff7043;
@@ -141,6 +145,7 @@ body.theme-plain {
   --timer-color: #888;
   --cell-initial-bg: #e0e0e0;
   --cell-selected-bg: #bdbdbd;
+  --cell-context-border: #999;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #222;
   --cell-border: #bbb;
@@ -171,6 +176,7 @@ body.theme-matrix {
   --timer-color: #baffc9;
   --cell-initial-bg: #263826;
   --cell-selected-bg: #39ff14;
+  --cell-context-border: #39ff14;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #39ff14;
@@ -201,6 +207,7 @@ body.theme-solarized {
   --timer-color: #b58900;
   --cell-initial-bg: #eee8d5;
   --cell-selected-bg: #b58900;
+  --cell-context-border: #b58900;
   --cell-incorrect-bg: #dc322f;
   --cell-incorrect-text: #fff;
   --cell-border: #b58900;
@@ -231,6 +238,7 @@ body.theme-vibrant {
   --timer-color: #1b998b;
   --cell-initial-bg: #f3c623;
   --cell-selected-bg: #1b998b;
+  --cell-context-border: #1b998b;
   --cell-incorrect-bg: #d72660;
   --cell-incorrect-text: #fff;
   --cell-border: #1b998b;
@@ -261,6 +269,7 @@ body.theme-barbie {
   --timer-color: #ff69b4;
   --cell-initial-bg: #ffd6ec;
   --cell-selected-bg: #ff69b4;
+  --cell-context-border: #ff69b4;
   --cell-incorrect-bg: #e21b80;
   --cell-incorrect-text: #fff;
   --cell-border: #ff69b4;

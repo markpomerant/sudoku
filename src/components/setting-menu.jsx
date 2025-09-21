@@ -45,6 +45,8 @@ export default function SettingsMenu({
   onToggleMistakes,
   highlightUsedNumbers,
   onToggleHighlight,
+  highlightContext,
+  onToggleHighlightContext,
   theme,
   onThemeChange,
 }) {
@@ -78,6 +80,17 @@ export default function SettingsMenu({
                 }}
               />
               Show Mistakes
+            </StyledLabel>
+
+            <StyledLabel>
+              <input
+                type="checkbox"
+                checked={highlightContext}
+                onChange={(e) => {
+                  onToggleHighlightContext(e.target.checked);
+                }}
+              />
+              Highlight Selection Context
             </StyledLabel>
 
             <StyledHr />
