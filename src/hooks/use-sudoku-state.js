@@ -33,11 +33,18 @@ export function useSudokuState() {
     setIsComplete(false);
     setNoteMode(false);
     setHighlightUsedNumbers(false);
-    setShowMistakes(false);
+    // Don't reset showMistakes - let it persist across games
   };
 
   const handleRestartGame = () => {
-    setCells(originalCells.map((cell) => ({ ...cell })));
+    // Reset cells to original state, clearing any notes and incorrect flags
+    setCells(originalCells.map((cell) => ({
+      value: cell.value,
+      isInitial: cell.isInitial,
+      isIncorrect: false,
+      notes: [],
+      centerNotes: []
+    })));
     setSelectedIndex(null);
     setIsComplete(false);
   };
@@ -110,9 +117,8 @@ export function useSudokuState() {
       (cell, i) => cell.value === puzzleState.solution[Math.floor(i / 9)][i % 9]
     );
     const noneIncorrect = cells.every((cell) => !cell.isIncorrect);
-    if (allCorrect && noneIncorrect) {
-      setIsComplete(true);
-    }
+    // Always update isComplete based on current state
+    setIsComplete(allCorrect && noneIncorrect);
   }, [cells, puzzleState]);
 
   return {
