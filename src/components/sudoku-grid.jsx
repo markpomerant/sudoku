@@ -7,14 +7,21 @@
 //   - cell (object): The cell data (value, notes, index, etc).
 //   - isSelected (boolean): Whether the cell is currently selected.
 //   - onClick (function): Callback for cell click.
+//   - disabled (boolean): Whether the cell is disabled.
+//   - contextBorders (object): Border highlighting configuration for row/column/box context.
+//   - patternHighlights (array): Array of pattern highlight objects for visual indicators.
 //
 // SudokuGrid Props:
 //   - cells (array): Array of cell objects for the grid.
 //   - selectedIndex (number): The index of the currently selected cell.
-//   - onCellClick (function): Callback for cell click.
+//   - onSelect (function): Callback for cell selection.
+//   - disabled (boolean): Whether the grid is disabled.
+//   - highlightContext (boolean): Whether to highlight row/column/box context.
+//   - detectedPatterns (array): Array of detected Sudoku patterns for highlighting.
+//   - hintPattern (object): Current hint pattern to highlight (overrides regular patterns).
 //
 // Usage:
-//   <SudokuGrid cells={cells} selectedIndex={index} onCellClick={fn} />
+//   <SudokuGrid cells={cells} selectedIndex={index} onSelect={fn} detectedPatterns={patterns} />
 
 import React from "react";
 import styled from '@emotion/styled';
@@ -22,10 +29,17 @@ import styled from '@emotion/styled';
 /**
  * Renders a single cell in the Sudoku grid.
  *
- * @param {{ cell: object, isSelected: boolean, onClick: () => void }} props - Cell props.
+ * @param {{
+ *   cell: object,
+ *   isSelected: boolean,
+ *   onClick: () => void,
+ *   disabled?: boolean,
+ *   contextBorders?: object,
+ *   patternHighlights?: object[]
+ * }} props - Cell props.
  * @returns {JSX.Element} The rendered cell.
  */
-function SudokuCell({ cell, isSelected, onClick, disabled, contextBorders }) {
+function SudokuCell({ cell, isSelected, onClick, disabled, contextBorders, patternHighlights }) {
   return (
     <CellDiv
       onClick={disabled ? undefined : onClick}
@@ -35,6 +49,7 @@ function SudokuCell({ cell, isSelected, onClick, disabled, contextBorders }) {
       cellIndex={cell.index}
       disabled={disabled}
       contextBorders={contextBorders}
+      patternHighlights={patternHighlights}
     >
       {cell.value !== 0 ? (
         cell.value
@@ -58,10 +73,18 @@ function SudokuCell({ cell, isSelected, onClick, disabled, contextBorders }) {
 /**
  * Renders the Sudoku puzzle grid.
  *
- * @param {{ cells: object[], selectedIndex: number, onSelect: (index: number) => void, disabled?: boolean }} props - Grid props.
+ * @param {{
+ *   cells: object[],
+ *   selectedIndex: number,
+ *   onSelect: (index: number) => void,
+ *   disabled?: boolean,
+ *   highlightContext?: boolean,
+ *   detectedPatterns?: object[],
+ *   hintPattern?: object | null
+ * }} props - Grid props.
  * @returns {JSX.Element} The rendered grid.
  */
-export default function SudokuGrid({ cells, selectedIndex, onSelect, disabled, highlightContext }) {
+export default function SudokuGrid({ cells, selectedIndex, onSelect, disabled, highlightContext, detectedPatterns = [], hintPattern = null }) {
   // Calculate which borders to show for context highlighting
   const getContextBorders = (index) => {
     if (selectedIndex === null || selectedIndex === undefined || !highlightContext) {
@@ -145,10 +168,67 @@ export default function SudokuGrid({ cells, selectedIndex, onSelect, disabled, h
 
     return borders;
   };
+
+  // Calculate pattern highlights for each cell
+  const getPatternHighlights = (index) => {
+    const highlights = [];
+
+    // Add highlights from detected patterns (only if they're enabled in settings)
+    detectedPatterns.forEach(pattern => {
+      if (pattern.cells.includes(index)) {
+        highlights.push({
+          type: pattern.type,
+          name: pattern.name,
+          description: pattern.description,
+          color: `var(--pattern-${pattern.type.replace('-', '-')})`
+        });
+      }
+
+      // Also highlight affected cells for some patterns
+      if (pattern.affectedCells && pattern.affectedCells.includes(index)) {
+        highlights.push({
+          type: `${pattern.type}-affected`,
+          name: `${pattern.name} (Affected)`,
+          description: `Can eliminate candidates due to ${pattern.name}`,
+          color: `var(--pattern-${pattern.type.replace('-', '-')})`,
+          isAffected: true
+        });
+      }
+    });
+
+    // Add hint pattern highlighting (always shown when hint is active)
+    if (hintPattern) {
+      if (hintPattern.cells.includes(index)) {
+        highlights.push({
+          type: `${hintPattern.type}-hint`,
+          name: `${hintPattern.name} (Hint)`,
+          description: hintPattern.description,
+          color: `var(--pattern-${hintPattern.type.replace('-', '-')})`,
+          isHint: true
+        });
+      }
+
+      // Also highlight affected cells for hint patterns
+      if (hintPattern.affectedCells && hintPattern.affectedCells.includes(index)) {
+        highlights.push({
+          type: `${hintPattern.type}-hint-affected`,
+          name: `${hintPattern.name} (Hint - Affected)`,
+          description: `Can eliminate candidates due to ${hintPattern.name}`,
+          color: `var(--pattern-${hintPattern.type.replace('-', '-')})`,
+          isAffected: true,
+          isHint: true
+        });
+      }
+    }
+
+    return highlights;
+  };
+
   return (
     <GridContainer>
       {cells.map((cell, i) => {
         const contextBorders = getContextBorders(i);
+        const patternHighlights = getPatternHighlights(i);
         return (
           <SudokuCell
             key={i}
@@ -157,6 +237,7 @@ export default function SudokuGrid({ cells, selectedIndex, onSelect, disabled, h
             onClick={() => onSelect(i)}
             disabled={disabled}
             contextBorders={contextBorders}
+            patternHighlights={patternHighlights}
           />
         );
       })}
@@ -198,18 +279,40 @@ const CellDiv = styled.div`
   justify-content: center;
   color: ${({ isIncorrect }) => isIncorrect ? 'var(--cell-incorrect-text)' : 'var(--primary-text)'};
   transition: box-shadow 0.15s ease;
-  box-shadow: ${({ contextBorders }) => {
-    if (!contextBorders) return 'none';
-
+  box-shadow: ${({ contextBorders, patternHighlights }) => {
     const shadows = [];
-    const color = 'var(--cell-context-border)';
-    const thickness = '2px';
 
-    // Use inset box-shadow to create borders without affecting layout
-    if (contextBorders.top) shadows.push(`inset 0 ${thickness} 0 0 ${color}`);
-    if (contextBorders.right) shadows.push(`inset -${thickness} 0 0 0 ${color}`);
-    if (contextBorders.bottom) shadows.push(`inset 0 -${thickness} 0 0 ${color}`);
-    if (contextBorders.left) shadows.push(`inset ${thickness} 0 0 0 ${color}`);
+    // Context highlighting (row/column/box)
+    if (contextBorders) {
+      const color = 'var(--cell-context-border)';
+      const thickness = '2px';
+
+      if (contextBorders.top) shadows.push(`inset 0 ${thickness} 0 0 ${color}`);
+      if (contextBorders.right) shadows.push(`inset -${thickness} 0 0 0 ${color}`);
+      if (contextBorders.bottom) shadows.push(`inset 0 -${thickness} 0 0 ${color}`);
+      if (contextBorders.left) shadows.push(`inset ${thickness} 0 0 0 ${color}`);
+    }
+
+    // Pattern highlighting
+    if (patternHighlights && patternHighlights.length > 0) {
+      patternHighlights.forEach((highlight, index) => {
+        const offset = index * 3; // Offset each pattern highlight
+        const isHint = highlight.isHint;
+        const thickness = highlight.isAffected ? (isHint ? '2px' : '1px') : (isHint ? '3px' : '2px');
+
+        // Add a colored border around the cell for pattern highlighting
+        shadows.push(`inset 0 0 0 ${thickness} ${highlight.color}`);
+
+        // For hint patterns, add a stronger outer glow
+        if (isHint) {
+          shadows.push(`0 0 8px ${highlight.color}`);
+        }
+        // For affected cells, add a subtle outer glow
+        else if (highlight.isAffected) {
+          shadows.push(`0 0 4px ${highlight.color}`);
+        }
+      });
+    }
 
     return shadows.length > 0 ? shadows.join(', ') : 'none';
   }};

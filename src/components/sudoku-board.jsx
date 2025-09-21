@@ -24,6 +24,7 @@ import { useTimer } from "../hooks/use-timer";
 import { useSelectionAndHighlighting } from "../hooks/use-selection-and-highlighting";
 import { useValidation } from "../hooks/use-validation";
 import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state";
+import { detectSudokuPatterns } from "../lib/sudoku-patterns";
 
     /**
      * Main Sudoku board component, manages game state and renders all UI.
@@ -61,6 +62,18 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
         const [highlightUsedNumbers, setHighlightUsedNumbers] = React.useState(false);
         const [showMistakes, setShowMistakes] = React.useState(false);
         const [highlightContext, setHighlightContext] = React.useState(true); // Default to true for better UX
+        const [showHintButton, setShowHintButton] = React.useState(true);
+
+        // Pattern detection settings
+        const [patternSettings, setPatternSettings] = React.useState({
+            nakedSingles: true,
+            hiddenSingles: true,
+            nakedPairs: false,
+            pointingPairs: false
+        });
+        const [detectedPatterns, setDetectedPatterns] = React.useState([]);
+        const [hintMessage, setHintMessage] = React.useState('');
+        const [hintPattern, setHintPattern] = React.useState(null);
         const validThemes = [
             'light', 'dark', 'ocean', 'redsands', 'plain', 'matrix', 'solarized', 'vibrant', 'barbie'
         ];
@@ -105,6 +118,8 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             highlightUsedNumbers,
             showMistakes,
             highlightContext,
+            patternSettings,
+            showHintButton,
             timerActive // persist paused state
         });
 
@@ -119,6 +134,12 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                 if (restoredState.highlightContext !== undefined) {
                     setHighlightContext(restoredState.highlightContext);
                 }
+                if (restoredState.patternSettings) {
+                    setPatternSettings(restoredState.patternSettings);
+                }
+                if (restoredState.showHintButton !== undefined) {
+                    setShowHintButton(restoredState.showHintButton);
+                }
                 setElapsedSeconds(restoredState.elapsedSeconds);
                 if (restoredState.timerActive === false) {
                     stopTimer();
@@ -127,6 +148,14 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                 }
             }
         }, [restoredState]);
+
+        // Pattern detection effect - runs when board state or pattern settings change
+        useEffect(() => {
+            if (puzzleState && cells.length > 0) {
+                const patterns = detectSudokuPatterns(cells, puzzleState, patternSettings);
+                setDetectedPatterns(patterns);
+            }
+        }, [cells, puzzleState, patternSettings]);
 
         const handleClear = () => {
             if (selectedIndex == null || isComplete) return;
@@ -193,6 +222,55 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
             }
         };
 
+        const handleHint = () => {
+            if (selectedIndex === null || selectedIndex === undefined || isComplete) {
+                setHintMessage('Select a cell to get a hint');
+                setTimeout(() => setHintMessage(''), 3000);
+                return;
+            }
+
+            // Detect ALL patterns for hint purposes, regardless of display settings
+            const allPatterns = detectSudokuPatterns(cells, puzzleState, {
+                nakedSingles: true,
+                hiddenSingles: true,
+                nakedPairs: true,
+                pointingPairs: true
+            });
+
+            // Filter patterns that affect the selected cell
+            const relevantPatterns = allPatterns.filter(pattern =>
+                pattern.cells.includes(selectedIndex)
+            );
+
+            if (relevantPatterns.length === 0) {
+                setHintMessage('No patterns detected for this cell');
+                setTimeout(() => setHintMessage(''), 3000);
+                return;
+            }
+
+            // Define pattern priority (most important first)
+            const patternPriority = {
+                'naked-single': 1,
+                'hidden-single': 2,
+                'naked-pair': 3,
+                'pointing-pair': 4
+            };
+
+            // Find the most important pattern
+            const mostImportantPattern = relevantPatterns.reduce((best, current) => {
+                const bestPriority = patternPriority[best.type] || 999;
+                const currentPriority = patternPriority[current.type] || 999;
+                return currentPriority < bestPriority ? current : best;
+            });
+
+            setHintMessage(mostImportantPattern.name);
+            setHintPattern(mostImportantPattern);
+            setTimeout(() => {
+                setHintMessage('');
+                setHintPattern(null);
+            }, 5000);
+        };
+
         if (!hasLoaded) return null;
 
         if (!difficulty || !puzzleState) {
@@ -256,6 +334,10 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                     onToggleHighlight={() => { setHighlightUsedNumbers(!highlightUsedNumbers); }}
                     highlightContext={highlightContext}
                     onToggleHighlightContext={() => { setHighlightContext(!highlightContext); }}
+                    patternSettings={patternSettings}
+                    onPatternSettingsChange={setPatternSettings}
+                    showHintButton={showHintButton}
+                    onToggleHintButton={() => { setShowHintButton(!showHintButton); }}
                     onToggle={() => setShowSettings(!showSettings)}
                     theme={theme}
                     onThemeChange={setTheme}
@@ -274,6 +356,8 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         isComplete={isComplete}
                         disabled={!timerActive}
                         highlightContext={highlightContext}
+                        detectedPatterns={detectedPatterns}
+                        hintPattern={hintPattern}
                     />
                 </div>
 
@@ -288,6 +372,17 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                         timerActive={timerActive}
                         onPauseToggle={handlePauseToggle}
                     />
+                    {showHintButton && (
+                        <HintButton
+                            onClick={handleHint}
+                            disabled={!timerActive}
+                            aria-label="Get hint for selected cell"
+                            type="button"
+                        >
+                            <HintIconStyled size={16} />
+                            Hint
+                        </HintButton>
+                    )}
                 </div>
 
                 <NumberPad
@@ -298,11 +393,15 @@ import { useLocalStorageGameState } from "../hooks/use-local-storage-game-state"
                     selectedIndex={selectedIndex}
                 />
 
-                {isComplete && (
+                {isComplete ? (
                     <CompleteMessage>
                         🎉 Sudoku Complete!
                     </CompleteMessage>
-                )}
+                ) : hintMessage ? (
+                    <HintMessage>
+                        💡 {hintMessage}
+                    </HintMessage>
+                ) : null}
             </BoardContainer>
         );
     }
@@ -326,6 +425,13 @@ const CompleteMessage = styled.div`
   color: var(--complete-message);
 `;
 
+const HintMessage = styled.div`
+  margin-top: 20px;
+  font-size: 18px;
+  color: var(--accent);
+  font-weight: 500;
+`;
+
 const PausedOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -342,6 +448,14 @@ const PausedOverlay = styled.div`
 `;
 
 // Copy the SettingsIcon and SettingsIconStyled from setting-menu.jsx
+function HintIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" fill="currentColor"/>
+    </svg>
+  );
+}
+
 function SettingsIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 174.248 174.248" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -380,6 +494,16 @@ function SettingsIcon({ size = 20 }) {
   );
 }
 
+const HintIconStyled = styled(HintIcon)`
+  color: var(--button-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  pointer-events: auto;
+`;
+
 const SettingsIconStyled = styled(SettingsIcon)`
   color: var(--button-text);
   cursor: pointer;
@@ -388,6 +512,52 @@ const SettingsIconStyled = styled(SettingsIcon)`
   justify-content: center;
   transition: color 0.2s;
   pointer-events: auto;
+`;
+
+const HintButton = styled.button`
+  background: var(--button-bg);
+  border: 1px solid var(--button-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--button-text);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--button-bg-alt);
+    border-color: var(--button-border-active);
+    color: var(--accent);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+`;
+
+const HintIconButton = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: inherit;
+  &:hover, &:focus {
+    color: var(--accent);
+    outline: none;
+  }
 `;
 
 const SettingsIconButton = styled.button`

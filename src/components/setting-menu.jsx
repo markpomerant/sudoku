@@ -12,11 +12,18 @@
 //   - onToggleMistakes (function): Callback to toggle mistake highlighting.
 //   - highlightUsedNumbers (boolean): Whether to highlight used numbers.
 //   - onToggleHighlight (function): Callback to toggle highlighting of used numbers.
+//   - highlightContext (boolean): Whether to highlight row/column/box context for selected cell.
+//   - onToggleHighlightContext (function): Callback to toggle context highlighting.
+//   - patternSettings (object): Settings for pattern detection (nakedSingles, hiddenSingles, etc.).
+//   - onPatternSettingsChange (function): Callback to update pattern settings.
+//   - showHintButton (boolean): Whether to show the hint button.
+//   - onToggleHintButton (function): Callback to toggle hint button visibility.
+//   - theme (string): Current theme name.
+//   - onThemeChange (function): Callback to change theme.
 //
 // Usage:
-//   <SettingsMenu show={bool} onToggle={fn} onRestart={fn} onNewGame={fn} showMistakes={bool} onToggleMistakes={fn} highlightUsedNumbers={bool} onToggleHighlight={fn} />
+//   <SettingsMenu show={bool} onToggle={fn} ... [all props] />
 
-import React from "react";
 import styled from '@emotion/styled';
 
 /**
@@ -31,6 +38,12 @@ import styled from '@emotion/styled';
  *   onToggleMistakes: () => void,
  *   highlightUsedNumbers: boolean,
  *   onToggleHighlight: () => void,
+ *   highlightContext: boolean,
+ *   onToggleHighlightContext: () => void,
+ *   patternSettings: object,
+ *   onPatternSettingsChange: (settings: object) => void,
+ *   showHintButton: boolean,
+ *   onToggleHintButton: () => void,
  *   theme: string,
  *   onThemeChange: (theme: string) => void
  * }} props - Component props.
@@ -47,6 +60,10 @@ export default function SettingsMenu({
   onToggleHighlight,
   highlightContext,
   onToggleHighlightContext,
+  patternSettings,
+  onPatternSettingsChange,
+  showHintButton,
+  onToggleHintButton,
   theme,
   onThemeChange,
 }) {
@@ -60,38 +77,131 @@ export default function SettingsMenu({
             <CloseButton onClick={onToggle}>&times;</CloseButton>
           </ModalHeader>
           <ModalBody>
-            <StyledLabel>
-              <input
-                type="checkbox"
-                checked={highlightUsedNumbers}
-                onChange={(e) => {
-                  onToggleHighlight(e.target.checked);
-                }}
-              />
-              Highlight Used Numbers
-            </StyledLabel>
+            <SettingsGrid>
+              <CompactLabel>
+                <input
+                  type="checkbox"
+                  checked={highlightUsedNumbers}
+                  onChange={(e) => {
+                    onToggleHighlight(e.target.checked);
+                  }}
+                />
+                Highlight Used Numbers
+              </CompactLabel>
 
-            <StyledLabel>
-              <input
-                type="checkbox"
-                checked={showMistakes}
-                onChange={(e) => {
-                  onToggleMistakes(e.target.checked);
-                }}
-              />
-              Show Mistakes
-            </StyledLabel>
+              <CompactLabel>
+                <input
+                  type="checkbox"
+                  checked={showMistakes}
+                  onChange={(e) => {
+                    onToggleMistakes(e.target.checked);
+                  }}
+                />
+                Show Mistakes
+              </CompactLabel>
 
-            <StyledLabel>
-              <input
-                type="checkbox"
-                checked={highlightContext}
-                onChange={(e) => {
-                  onToggleHighlightContext(e.target.checked);
-                }}
-              />
-              Highlight Selection Context
-            </StyledLabel>
+              <CompactLabel>
+                <input
+                  type="checkbox"
+                  checked={highlightContext}
+                  onChange={(e) => {
+                    onToggleHighlightContext(e.target.checked);
+                  }}
+                />
+                Highlight Context
+              </CompactLabel>
+
+              <CompactLabel>
+                <input
+                  type="checkbox"
+                  checked={showHintButton}
+                  onChange={(e) => {
+                    onToggleHintButton(e.target.checked);
+                  }}
+                />
+                Show Hint Button
+              </CompactLabel>
+            </SettingsGrid>
+
+            <StyledHr />
+
+            <PatternSection>
+              <PatternSectionTitle>Pattern Detection</PatternSectionTitle>
+
+              <PatternGroup>
+                <PatternGroupTitle>Beginner Patterns</PatternGroupTitle>
+                <PatternLabel>
+                  <div>
+                    <input
+                      type="checkbox"
+                      checked={patternSettings?.nakedSingles ?? true}
+                      onChange={(e) => {
+                        onPatternSettingsChange({
+                          ...patternSettings,
+                          nakedSingles: e.target.checked
+                        });
+                      }}
+                    />
+                    Naked Singles
+                  </div>
+                  <PatternDescription>Cells with only one possible candidate</PatternDescription>
+                </PatternLabel>
+
+                <PatternLabel>
+                  <div>
+                    <input
+                      type="checkbox"
+                      checked={patternSettings?.hiddenSingles ?? true}
+                      onChange={(e) => {
+                        onPatternSettingsChange({
+                          ...patternSettings,
+                          hiddenSingles: e.target.checked
+                        });
+                      }}
+                    />
+                    Hidden Singles
+                  </div>
+                  <PatternDescription>Only one cell in a unit can contain a number</PatternDescription>
+                </PatternLabel>
+              </PatternGroup>
+
+              <PatternGroup>
+                <PatternGroupTitle>Intermediate Patterns</PatternGroupTitle>
+                <PatternLabel>
+                  <div>
+                    <input
+                      type="checkbox"
+                      checked={patternSettings?.nakedPairs ?? false}
+                      onChange={(e) => {
+                        onPatternSettingsChange({
+                          ...patternSettings,
+                          nakedPairs: e.target.checked
+                        });
+                      }}
+                    />
+                    Naked Pairs
+                  </div>
+                  <PatternDescription>Two cells with identical two-candidate sets</PatternDescription>
+                </PatternLabel>
+
+                <PatternLabel>
+                  <div>
+                    <input
+                      type="checkbox"
+                      checked={patternSettings?.pointingPairs ?? false}
+                      onChange={(e) => {
+                        onPatternSettingsChange({
+                          ...patternSettings,
+                          pointingPairs: e.target.checked
+                        });
+                      }}
+                    />
+                    Pointing Pairs/Triples
+                  </div>
+                  <PatternDescription>Box candidates confined to one row/column</PatternDescription>
+                </PatternLabel>
+              </PatternGroup>
+            </PatternSection>
 
             <StyledHr />
 
@@ -247,11 +357,98 @@ const ModalBody = styled.div`
   gap: 12px;
 `;
 
-const StyledLabel = styled.label`
+const SettingsGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+`;
+
+const CompactLabel = styled.label`
   display: flex;
   align-items: center;
   font-size: 14px;
   color: var(--primary-text);
+  white-space: nowrap;
+
+  input {
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+`;
+
+const StyledLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 14px;
+  color: var(--primary-text);
+  margin-bottom: 8px;
+
+  > div:first-of-type {
+    display: flex;
+    align-items: center;
+  }
+
+  input {
+    margin-right: 8px;
+  }
+`;
+
+const PatternSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const PatternSectionTitle = styled.h3`
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--primary-text);
+`;
+
+const PatternGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 8px;
+`;
+
+const PatternGroupTitle = styled.h4`
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--secondary-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+
+const PatternDescription = styled.div`
+  font-size: 11px;
+  color: var(--secondary-text);
+  margin-top: 2px;
+  font-style: italic;
+`;
+
+const PatternLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 14px;
+  color: var(--primary-text);
+  margin-bottom: 8px;
+
+  > div:first-of-type {
+    display: flex;
+    align-items: center;
+  }
+
   input {
     margin-right: 8px;
   }

@@ -22,6 +22,10 @@ body {
   --cell-initial-bg: #eee;
   --cell-selected-bg: #cceeff;
   --cell-context-border: #4a90e2;
+  --pattern-naked-single: #2e7d32;
+  --pattern-hidden-single: #1976d2;
+  --pattern-naked-pair: #f57c00;
+  --pattern-pointing-pair: #7b1fa2;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #222;
   --cell-border: gray;
@@ -53,6 +57,10 @@ body.theme-dark {
   --cell-initial-bg: #222;
   --cell-selected-bg: #003c4d;
   --cell-context-border: #00bcd4;
+  --pattern-naked-single: #4caf50;
+  --pattern-hidden-single: #2196f3;
+  --pattern-naked-pair: #ff9800;
+  --pattern-pointing-pair: #9c27b0;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #444;
@@ -84,6 +92,10 @@ body.theme-ocean {
   --cell-initial-bg: #145374;
   --cell-selected-bg: #26c6da;
   --cell-context-border: #26c6da;
+  --pattern-naked-single: #00695c;
+  --pattern-hidden-single: #0277bd;
+  --pattern-naked-pair: #e65100;
+  --pattern-pointing-pair: #4a148c;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #26c6da;
@@ -115,6 +127,10 @@ body.theme-redsands {
   --cell-initial-bg: #3e2723;
   --cell-selected-bg: #ff7043;
   --cell-context-border: #ff7043;
+  --pattern-naked-single: #8bc34a;
+  --pattern-hidden-single: #03a9f4;
+  --pattern-naked-pair: #ffc107;
+  --pattern-pointing-pair: #e91e63;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #ff7043;
@@ -146,6 +162,10 @@ body.theme-plain {
   --cell-initial-bg: #e0e0e0;
   --cell-selected-bg: #bdbdbd;
   --cell-context-border: #999;
+  --pattern-naked-single: #666;
+  --pattern-hidden-single: #888;
+  --pattern-naked-pair: #aaa;
+  --pattern-pointing-pair: #777;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #222;
   --cell-border: #bbb;
@@ -177,6 +197,10 @@ body.theme-matrix {
   --cell-initial-bg: #263826;
   --cell-selected-bg: #39ff14;
   --cell-context-border: #39ff14;
+  --pattern-naked-single: #76ff03;
+  --pattern-hidden-single: #00e676;
+  --pattern-naked-pair: #ffeb3b;
+  --pattern-pointing-pair: #e91e63;
   --cell-incorrect-bg: #ff1744;
   --cell-incorrect-text: #fff;
   --cell-border: #39ff14;
@@ -208,6 +232,10 @@ body.theme-solarized {
   --cell-initial-bg: #eee8d5;
   --cell-selected-bg: #b58900;
   --cell-context-border: #b58900;
+  --pattern-naked-single: #689f38;
+  --pattern-hidden-single: #1976d2;
+  --pattern-naked-pair: #f57c00;
+  --pattern-pointing-pair: #7b1fa2;
   --cell-incorrect-bg: #dc322f;
   --cell-incorrect-text: #fff;
   --cell-border: #b58900;
@@ -239,6 +267,10 @@ body.theme-vibrant {
   --cell-initial-bg: #f3c623;
   --cell-selected-bg: #1b998b;
   --cell-context-border: #1b998b;
+  --pattern-naked-single: #00695c;
+  --pattern-hidden-single: #0277bd;
+  --pattern-naked-pair: #e65100;
+  --pattern-pointing-pair: #4a148c;
   --cell-incorrect-bg: #d72660;
   --cell-incorrect-text: #fff;
   --cell-border: #1b998b;
@@ -270,6 +302,10 @@ body.theme-barbie {
   --cell-initial-bg: #ffd6ec;
   --cell-selected-bg: #ff69b4;
   --cell-context-border: #ff69b4;
+  --pattern-naked-single: #e91e63;
+  --pattern-hidden-single: #2196f3;
+  --pattern-naked-pair: #ff9800;
+  --pattern-pointing-pair: #9c27b0;
   --cell-incorrect-bg: #e21b80;
   --cell-incorrect-text: #fff;
   --cell-border: #ff69b4;
