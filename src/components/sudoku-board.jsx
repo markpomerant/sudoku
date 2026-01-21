@@ -396,6 +396,18 @@ import { detectSudokuPatterns } from "../lib/sudoku-patterns";
                 {isComplete ? (
                     <CompleteMessage>
                         🎉 Sudoku Complete!
+                        <NewGameButton onClick={() => {
+                            setDifficulty(null);
+                            setPuzzleState(null);
+                            setNoteMode(false);
+                            setCenterNoteMode(false);
+                            setHighlightUsedNumbers(false);
+                            setSelectedIndex(null);
+                            setIsComplete(false);
+                            resetTimer();
+                        }}>
+                            New Game
+                        </NewGameButton>
                     </CompleteMessage>
                 ) : hintMessage ? (
                     <HintMessage>
@@ -423,6 +435,33 @@ const CompleteMessage = styled.div`
   margin-top: 20px;
   font-size: 18px;
   color: var(--complete-message);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+`;
+
+const NewGameButton = styled.button`
+  background: var(--button-bg);
+  border: 1px solid var(--button-border);
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: var(--button-text);
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--button-bg-alt);
+    border-color: var(--button-border-active);
+    color: var(--accent);
+  }
+
+  &:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
 `;
 
 const HintMessage = styled.div`
